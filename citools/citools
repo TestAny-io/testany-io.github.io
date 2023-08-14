@@ -1,0 +1,70 @@
+#!/bin/bash
+
+_get-version() {
+  local version=$(git describe --tags --abbrev=0 --match *.*.*)
+  echo -n "$version"
+}
+
+_is-tagged() {
+  git describe --tags --exact-match --match *.*.* > /dev/null 2>&1
+}
+
+_tag-version() {
+  if _is-tagged; then
+    return
+  fi
+  local branch=$(git rev-parse --abbrev-ref HEAD)
+  local version=$(git describe --tags --abbrev=0 --match *.*.*)
+  local comments=$(git log "$version"...HEAD --format=%s)
+  if echo "$comments" | grep '(MAJOR)' > /dev/null ; then
+    version=$(./semver bump major "$version")
+  elif echo "$comments" | grep '(MINOR)' > /dev/null; then
+    version=$(./semver bump minor "$version")
+  elif echo "$comments" | grep '(PATCH)' > /dev/null; then
+    version=$(./semver bump patch "$version")
+  elif [ "$branch" == "dev" ]; then
+    version=$(./semver bump patch "$version")
+  elif [ "$branch" == "qa" ]; then
+    version=$(./semver bump minor "$version")
+  else
+    echo "unknown branch"
+    exit -1
+  fi
+  git tag "$version"
+}
+
+_git-pushable-remote() {
+  export access_token=$(
+    curl -s -X POST -u "${CLIENT_ID}:${CLIENT_SECRET}" "https://bitbucket.org/site/oauth2/access_token" \
+	 -d grant_type=client_credentials -d scopes="repository"| jq -r '.access_token')
+  git remote set-url origin "https://x-token-auth:${access_token}@bitbucket.org/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}"
+}
+
+_aws-assume-role() {
+  export AWS_REGION="cn-northwest-1"
+  export AWS_ROLE_ARN="${AWS_BITBUCKET_ARN}"
+  export AWS_WEB_IDENTITY_TOKEN_FILE=$(pwd)/web-identity-token
+  echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
+  aws sts assume-role-with-web-identity --role-arn "$AWS_ROLE_ARN" \
+      --role-session-name build-session --web-identity-token "$BITBUCKET_STEP_OIDC_TOKEN" \
+      --duration-seconds 1000 > /dev/null
+  export -p | grep AWS
+}
+
+_help() {
+    declare -F | while read line;
+    do
+	if [ ${line:11:1} == "_" ]; then
+	    echo ${line:12}
+	fi
+    done
+}
+
+fn="$1"
+shift
+if declare -F "_$fn" > /dev/null
+then
+    "_$fn" "$@"
+else
+    _help
+fi
