@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  simple:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2023-08-14T16:09:57.198843914+08:00"
+    description: Simple base helm chart
+    digest: fd6d7d18366ffda6c8b430da309919e3250dac572e0d0b68f50a45d4ed61a3f7
+    name: simple
+    type: application
+    urls:
+    - simple-0.1.0.tgz
+    version: 0.1.0
+generated: "2023-08-14T16:09:57.197336204+08:00"
