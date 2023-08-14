@@ -17,15 +17,15 @@ _tag-version() {
   local version=$(git describe --tags --abbrev=0 --match *.*.*)
   local comments=$(git log "$version"...HEAD --format=%s)
   if echo "$comments" | grep '(MAJOR)' > /dev/null ; then
-    version=$(./semver bump major "$version")
+    version=$(semver bump major "$version")
   elif echo "$comments" | grep '(MINOR)' > /dev/null; then
-    version=$(./semver bump minor "$version")
+    version=$(semver bump minor "$version")
   elif echo "$comments" | grep '(PATCH)' > /dev/null; then
-    version=$(./semver bump patch "$version")
+    version=$(semver bump patch "$version")
   elif [ "$branch" == "dev" ]; then
-    version=$(./semver bump patch "$version")
+    version=$(semver bump patch "$version")
   elif [ "$branch" == "qa" ]; then
-    version=$(./semver bump minor "$version")
+    version=$(semver bump minor "$version")
   else
     echo "unknown branch"
     exit -1
