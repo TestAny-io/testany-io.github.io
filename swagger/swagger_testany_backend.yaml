@@ -1,0 +1,1789 @@
+openapi: 3.0.3
+info:
+  title: Swagger Testany backend
+  description: |-
+    Testany backend API.
+
+    ### Check out its awesome features:
+    
+    * Show Case meta
+    * Show Pipeline meta
+    * Invoke Pipeline
+    * Show execution results
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: support@testany.io
+  license:
+    name: Testany
+    url: https://www.testany.com.cn
+  version: 2.0.0
+servers:
+  - url: https://ford-china.testany.com.cn/api/v2
+tags:
+  - name: Case Management
+    description: Operations about Case Metadata
+    #externalDocs:
+    #  description: Find out more
+    #  url: http://swagger.io
+  - name: Pipeline Management
+    description: Operations about Pipeline
+    #externalDocs:
+    #  description: Find out more
+    #  url: http://swagger.io
+  - name: Execution Management
+    description: Operations about Test Excecutions
+  - name: Workspace Management
+    description: Operations about Workspace
+  - name: Plan Management
+    description: Operations about Plan
+  - name: User Management
+    description: Operations about User
+  - name: Metering Query
+    description: Query about Metering
+paths:
+  /case/dryRun:
+    post:
+      tags:
+        - Case Management
+      summary: Dry run Case
+      description: Dry run Case
+      operationId: dryRunCase
+      requestBody:
+        description: >
+          Dry run the test case
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CaseForValidate'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseDryRunResult'
+        '405':
+          description: Validation exception
+  
+  /case:
+    post:
+      tags:
+        - Case Management
+      summary: Add a new Case
+      description: Add a new Case
+      operationId: addCase
+      requestBody:
+        description: Create a new Case
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseForCreate'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseOptResponse'
+        '405':
+          description: Invalid input
+
+          
+  /case/filteListCases:
+    get:
+      tags:
+        - Case Management
+      summary: List Cases with limited fields
+      description: For Pre query, list a lite cases to find out a specific Case Key or Name
+      operationId: filterListCases
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CaseFilter'          
+            
+        '400':
+          description: Invalid status value
+          
+  /case/filteListCreators:
+    get:
+      tags:
+        - Case Management
+      summary: List Case Creators
+      description: For Pre query, list creators
+      operationId: filterListCaseCreators
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'          
+            
+        '400':
+          description: Invalid status value
+  
+  /case/findMyCases:
+    get:
+      tags:
+        - Case Management
+      summary: List current user cases
+      description:  list current user created test cases
+      operationId: listMyCases
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CaseForList'          
+            
+        '400':
+          description: Invalid status value
+  
+  /case/findCases:
+    get:
+      tags:
+        - Case Management
+      summary: Finds Cases with multiple filters
+      description: Find Cases by keyOrName, description, env, creator
+      operationId: findCasesByNameOrKeyOrDescriptionOrEnv
+      parameters:
+        - name: key_or_name
+          in: query
+          description: case key or case Name
+          required: false
+          schema:
+            type: string
+        - name: description
+          in: query
+          description: case description
+          required: false
+          schema:
+            type: string
+        - name: environment
+          in: query
+          description: case environment
+          required: false
+          schema:
+            type: string
+        - name: creator_id
+          in: query
+          description: case creator
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CaseForList'
+        '400':
+          description: Invalid tag value
+  /case/{key}:
+    get:
+      tags:
+        - Case Management
+      summary: Find Case by key
+      description: Returns a single Case
+      operationId: getCaseByKey
+      parameters:
+        - name: key
+          in: path
+          description: key of case to return
+          required: true
+          schema:
+            type: string
+            example: 12345678
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Case'          
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Case not found
+    patch:
+      tags:
+        - Case Management
+      summary: Update an existing Case
+      description: Update an existing Case by Id
+      operationId: updateCase
+      parameters:
+        - name: key
+          in: path
+          description: key of case to return
+          required: true
+          schema:
+            type: string
+            example: 12345678
+      requestBody:
+        description: Update an existent Case Metadata
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseForCreate'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseOptResponse'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Case not found
+        '405':
+          description: Validation exception
+    delete:
+      tags:
+        - Case Management
+      summary: Deletes a Case
+      description: delete a Case
+      operationId: deleteCase
+      parameters:
+        - name: key
+          in: path
+          description: Case key to delete
+          required: true
+          schema:
+            type: string
+            example: '10101010' 
+      responses:
+        '400':
+          description: Invalid Case value
+        '405':
+          description: Validation exception
+          content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/OptResult'
+  
+  /pipeline/dryRun:
+    post:
+      tags:
+        - Pipeline Management
+      summary: Dry run Pipeline
+      description: Dry run Pipeline
+      operationId: dryRunPipeline
+      requestBody:
+        description: >
+          Dry run the pipeline
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PipelineForValidate'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PipelineDryRunResult'
+        '405':
+          description: Validation exception
+          
+  /pipeline:
+    post:
+      tags:
+        - Pipeline Management
+      summary: Add a pipeline.
+      description: add a pipeline
+      operationId: addPipeline
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PipelineForCreate'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PipelineOptResponse'
+        '405':
+          description: Invalid input
+
+
+  
+  /pipeline/{key}:
+    get:
+      tags:
+        - Pipeline Management
+      summary: Find Pipeline by key
+      description: Returns a single Pipeline
+      operationId: getPipelineByKey
+      parameters:
+        - name: key
+          in: path
+          description: key of pipeline to return
+          required: true
+          schema:
+            type: string
+            example: 12345678
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PipelineDetail'          
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Case not found
+    patch:
+      tags:
+        - Pipeline Management
+      summary: Update an existing Case
+      description: Update an existing Case by Id
+      operationId: updateCase
+      parameters:
+        - name: key
+          in: path
+          description: key of case to return
+          required: true
+          schema:
+            type: string
+            example: 12345678
+      requestBody:
+        description: Update an existent Case Metadata
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PipelineForCreate'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PipelineOptResponse'
+        '400':
+          description: Invalid Key supplied
+        '404':
+          description: Pipeline not found
+        '405':
+          description: Validation exception
+    delete:
+      tags:
+        - Pipeline Management
+      summary: Deletes a Pipeline
+      description: delete a Pipeline
+      operationId: deletePipeline
+      parameters:
+        - name: key
+          in: path
+          description: Pipeline key to delete
+          required: true
+          schema:
+            type: string
+            example: 'WKS-0001'
+      responses:
+        '400':
+          description: Invalid Case value
+          
+  /pipeline/{key}/execute:
+    post:
+      tags:
+        - Pipeline Management
+      summary: Execute Pipeline by key
+      description: Returns a Pipeline Execution Key
+      operationId: executePipelineByKey
+      parameters:
+        - name: key
+          in: path
+          description: key of case to return
+          required: true
+          schema:
+            type: string
+            example: 12345678
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PipelineExecuteResponse'          
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Case not found
+    
+          
+  /pipeline/filteListPipelines:
+    get:
+      tags:
+        - Pipeline Management
+      summary: List Pipelines with limited fields
+      description: For Pre query, list a lite Pipelines to find out a specific Pipelines Key or Name in one workspace
+      operationId: filterListPipelines
+      parameters:
+         - name: workspace
+           in: query
+           description: key of workspace to return
+           required: true
+           schema:
+             type: string
+             example: "WKS"
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PipelineFilter'          
+            
+        '400':
+          description: Invalid status value
+  /pipeline/filteListPipelineCreators:
+    get:
+      tags:
+        - Pipeline Management
+      summary: List Pipeline Creators with limited fields
+      description: For Pre query, list a lite Pipeline Creators to find out a specific Pipeline Creators
+      operationId: filterListPipelineCreators
+      parameters:
+         - name: workspace
+           in: query
+           description: key of workspace to return
+           required: true
+           schema:
+             type: string
+             example: "WKS"
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'          
+            
+        '400':
+          description: Invalid status value
+  
+  /pipeline/filteListPlanCreators:
+    get:
+      tags:
+        - Pipeline Management
+      summary: List Plan Creators with limited fields
+      description: For Pre query, list the plan creator which create a plan used the pipelines in one workspace
+      operationId: filterListPlanCreators
+      parameters:
+         - name: workspace
+           in: query
+           description: key of workspace to return
+           required: true
+           schema:
+             type: string
+             example: "WKS"
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'          
+            
+        '400':
+          description: Invalid status value
+  /pipeline/findPipelines:
+    get:
+      tags:
+        - Pipeline Management
+      summary: List Pipelines
+      description: List pipelines
+      operationId: findPipelines
+      parameters:
+         - name: workspace
+           in: query
+           description: key of workspace to return
+           required: true
+           schema:
+             type: string
+             example: "WKS"
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PipelineForList'          
+            
+        '400':
+          description: Invalid status value
+  /execution/findExecutions:
+    get:
+      tags:
+        - Execution Management
+      summary: List Executions by filters
+      description: List Executions by PipelineKey, ExecutionStatus, ExecutonTime, ExecutionEnvs,  PipelineCreator and PlanCreator
+      operationId: findExecutions
+      parameters:
+         - name: workspace
+           in: query
+           description: key of workspace to return
+           required: true
+           schema:
+             type: string
+             example: "WKS"
+         - name: pipeline_key
+           in: query
+           description: key of pipeline to return
+           required: false
+           schema:
+             type: string
+             example: "WKS-0001"
+         - name: status
+           in: query
+           required: false
+           schema:
+             type: integer
+             enum: [0,1,2,3]
+           description: >
+            Status:
+             * `0` - Running
+             * `1` - Passed
+             * `2` - Failed
+             * `3` - Planed - used for upcomming status
+         - name: start_time
+           in: query
+           description: execution happened after this time, include start_time
+           required: false
+           schema:
+             type: string
+             format: "yyyy-mm-dd HH:MM:00"
+         - name: finish_time
+           in: query
+           description: execution happened before this time, exclude end_time
+           required: false
+           schema:
+             type: string
+             format: "yyyy-mm-dd HH:MM:00"
+         - name: pipeline_creator_id
+           in: query
+           description: user id to return
+           required: false
+           schema:
+             type: integer
+             format: int64
+         - name: plan_creator_id
+           in: query
+           description: user id to return
+           required: false
+           schema:
+             type: integer
+             format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExecutionForList'          
+            
+        '400':
+          description: Invalid status value
+  /execution/{execution_key}/refresh:
+    get:
+      tags:
+        - Execution Management
+      summary: Refresh Execution Status
+      description: List Executions by PipelineKey, ExecutionStatus, ExecutonTime, ExecutionEnvs,  PipelineCreator and PlanCreator
+      operationId: refreshExecutionStatus
+      parameters:
+         - name: execution_key
+           in: path
+           description: key of workspace to return
+           required: true
+           schema:
+             type: string
+             example: "WKS"
+         
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutionForRefresh'          
+            
+        '400':
+          description: Invalid status value
+  /execution/{executionKey}:
+    get:
+      tags:
+        - Execution Management
+      summary: Get Execution Detail
+      description: Get Execution Detail information
+      operationId: getExecutionDetail
+      parameters:
+         - name: executionKey
+           in: path
+           description: key of workspace to return
+           required: true
+           schema:
+             type: string
+             example: "WKS"
+         
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutionDetail'          
+            
+        '400':
+          description: Invalid status value
+  
+  # /workspace/keyValidate:
+  #   post:
+  #     tags:
+  #       - Workspace Management
+  #     summary: Check workspace key exists or not
+  #     description: Check workspace key exists or not
+  #     operationId: workspaceKeyValidation
+  #     requestBody:
+  #       description: Check workspace key exists or not
+  #       content:
+  #         application/json:
+  #           schema:
+  #             type: object
+  #             properties:
+  #               key:
+  #                 type: string
+  #                 example: 'WKS'
+  #       required: true
+  #     responses:
+  #       '200':
+  #         description: Successful operation
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: object
+  #               properties:
+  #                 status:
+  #                   type: integer
+  #                   format: int64
+  #                   description: >
+  #                     1 -> unique
+  #                     2 -> duplicate
+  #                 message:
+  #                   type: string
+  #                   example: 'key exists'
+  #       '405':
+  #         description: Invalid input
+          
+  /workspace:
+    post:
+      tags:
+        - Workspace Management
+      summary: Add a new Workspace
+      description: Add a new Workspace
+      operationId: addWorkspace
+      requestBody:
+        description: Create a new Workspace
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Workspace'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+        '405':
+          description: Invalid input
+  /workspace/{key}:
+    get:
+      tags:
+        - Workspace Management
+      summary: Get a Workspace
+      description: Get a Workspace Detail
+      operationId: getWorkspace
+      parameters:
+        - name: key
+          in: path
+          description: key of workspace to return
+          required: true
+          schema:
+            type: string
+            example: WKS
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceDetail'
+        '405':
+          description: Invalid input      
+    patch:
+      tags:
+        - Workspace Management
+      summary: Update a Workspace
+      description: Update a Workspace
+      operationId: updateWorkspace
+      parameters:
+        - name: key
+          in: path
+          description: key of workspace to return
+          required: true
+          schema:
+            type: string
+            example: WKS
+      
+      requestBody:
+        description: Update a Workspace
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkspaceForUpdate'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+        '405':
+          description: Invalid input      
+  /workspace/findWorkspaces:
+    get:
+      tags:
+        - Workspace Management
+      summary: Get a Workspace List
+      description: Get a Workspace List
+      operationId: listWorkspace
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkspaceDetail'
+        '405':
+          description: Invalid input
+  
+  /plan:
+    post:
+      tags:
+        - Plan Management
+      summary: Add a new Plan
+      description: Add a new Plan
+      operationId: addPlan
+      requestBody:
+        description: Create a new Plan
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlanForOpt'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlanCreateResponse'
+        '405':
+          description: Invalid input
+  /plan/{key}:
+    get:
+      tags:
+        - Plan Management
+      summary: Get a Plan Detail
+      description: Get a Plan Detail
+      operationId: getPlan
+      parameters:
+        - name: key
+          in: path
+          description: key of workspace to return
+          required: true
+          schema:
+            type: string
+            example: P-WKS-0001
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlanForDetail'
+        '405':
+          description: Invalid input      
+    patch:
+      tags:
+        - Plan Management
+      summary: Update a Plan
+      description: Update a Plan
+      operationId: updatePlan
+      parameters:
+        - name: key
+          in: path
+          description: key of workspace to return
+          required: true
+          schema:
+            type: string
+            example: P-WKS-0001
+      
+      requestBody:
+        description: Update a Plan
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlanForOpt'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '405':
+          description: Invalid input    
+    delete:
+      tags:
+        - Plan Management
+      summary: Deletes a Plan
+      description: delete a Plan
+      operationId: deletePlan
+      parameters:
+        - name: key
+          in: path
+          description: Plan key to delete
+          required: true
+          schema:
+            type: string
+            format: 'P-WKS-0001'
+      responses:
+        '400':
+          description: Invalid value
+        '405':
+          description: Validation exception
+          content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/OptResult'
+          
+  /plan/findPlans:
+    get:
+      tags:
+        - Plan Management
+      summary: Get a Plan List
+      description: Get a Plan List
+      operationId: listPlan
+      parameters:
+         - name: workspace
+           in: query
+           description: key of workspace to return
+           required: true
+           schema:
+             type: string
+             example: "WKS"
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlanForList'
+        '405':
+          description: Invalid input
+  /user:
+    post:
+      tags:
+        - User Management
+      summary: Add a new User
+      description: Add a new User
+      operationId: addUser
+      requestBody:
+        description: Create a new User
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserForCreate'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: 
+                    type: string
+                    example: boyi.liang@testany.io
+        '405':
+          description: Invalid input
+  /user/filterListWatchers:
+    get:
+      tags:
+        - User Management
+      summary: List users
+      description: List Users
+      operationId: listUsers
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserForFilter'
+        '405':
+          description: Invalid input
+  
+  /metering/workspace:
+    get:
+      tags:
+        - Metering Query
+      summary: List count
+      description: List count
+      operationId: listWorkspaceCount
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    format: int64
+        '405':
+          description: Invalid input
+  /metering/pipelineExecution:
+    get:
+      tags:
+        - Metering Query
+      summary: List count
+      description: List count
+      operationId: listPipelineExecutionCount
+      parameters:
+        - name: begin_time
+          in: query
+          description: beginTime of execution
+          required: true
+          schema:
+            type: string
+            example: 'yyyy-MM-ddTHH:MM:SSZ'
+        - name: end_time
+          in: query
+          description: endTime of execution
+          required: true
+          schema:
+            type: string
+            example: 'yyyy-MM-ddTHH:MM:SSZ'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    format: int64
+        '405':
+          description: Invalid input
+  /metering/caseExecution:
+    get:
+      tags:
+        - Metering Query
+      summary: List count
+      description: List count
+      operationId: listCaseExecutionCount
+      parameters:
+        - name: begin_time
+          in: query
+          description: beginTime of execution
+          required: true
+          schema:
+            type: string
+            example: 'yyyy-MM-ddTHH:MM:SSZ'
+        - name: end_time
+          in: query
+          description: endTime of execution
+          required: true
+          schema:
+            type: string
+            example: 'yyyy-MM-ddTHH:MM:SSZ'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    format: int64
+        '405':
+          description: Invalid input
+components:
+  schemas:
+    UserForCreate:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 'xxxxxxxxxxx'
+          description: |
+            Different SSO Vendor provide different values
+            - Ford -> sub
+            - Office 365 -> sub
+        type:
+          type: string
+          enum: ["user","testany","cicd",'webex_space']
+        name:
+          type: string
+          example: 'Boyi Liang'
+          description: |
+            Different SSO Vendor provide different values
+            - Ford -> givenname+' '+ surname
+            - Office 365 -> name
+        email:
+          type: string
+          example: 'boyi.liang@testany.io'
+          description: |
+            Different SSO Vendor provide different values
+            - Ford -> emailaddress
+            - Office 365 -> upn
+        avatar:
+          type: string
+          example: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+        
+    UserForFilter:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 'xxxxxxxxxxx'
+        name:
+          type: string
+          example: 'Boyi Liang'
+        email:
+          type: string
+          example: 'boyi.liang@testany.io'
+          
+        
+    
+    PlanForOpt:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'My first plan'
+        description:
+          type: string
+          example: 'This is my first plan'
+        schedule_expr:
+          type: string
+          example: '* * * * *'
+        schedule_str:
+          type: string
+          example: 'Every day 31'
+        pipelines:
+          type: array
+          items:
+            $ref: '#/components/schemas/PipelineForPlanOpt'
+            
+    PlanCreateResponse:
+      type: object
+      properties:
+        key:
+          type: string
+          example: P-WKS-0001
+            
+    PlanForList:
+      type: object
+      properties:
+        key:
+          type: string
+          example: P-WKS-0001
+        name:
+          type: string
+          example: 'My first plan'
+        description:
+          type: string
+          example: 'This is my first plan'
+        schedule_str:
+          type: string
+          example: 'Every day 31st'
+          
+    PlanForDetail:
+      type: object
+      properties:
+        key:
+          type: string
+          example: P-WKS-0001
+        name:
+          type: string
+          example: 'My first plan'
+        description:
+          type: string
+          example: 'This is my first plan'
+        schedule_expr:
+          type: string
+          example: '* * * * *'
+        schedule_str:
+          type: string
+          example: 'Every day 31'
+        pipelines:
+          type: array
+          items:
+            $ref: '#/components/schemas/PipelineForPlan'
+    
+    PipelineForPlanOpt:
+      type: object
+      properties:
+        key:
+          type: string
+          example: WKS
+        watcher_ids:
+          type: array
+          items:
+            type: string
+            example: "10"
+            
+    PipelineForPlan:
+      type: object
+      properties:
+        key:
+          type: string
+          example: WKS
+        name:
+          type: string
+          example: Demo
+        description:
+          type: string
+          example: WKS
+        environments:
+          type: string
+          example: WKS
+        watchers:
+          type: array
+          items:
+            $ref: '#/components/schemas/User' 
+            
+    Workspace:
+      type: object
+      properties:
+        key:
+          type: string
+          example: WKS
+        name:
+          type: string
+          example: Demo
+        description:
+          type: string
+          example: WKS
+    WorkspaceDetail:
+      type: object
+      properties:
+        key:
+          type: string
+          example: WKS
+        name:
+          type: string
+          example: Demo
+        description:
+          type: string
+          example: WKS
+    WorkspaceForUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Demo
+        description:
+          type: string
+          example: WKS
+          
+    CaseForCreate:
+      type: object
+      properties:
+        name:
+          type: string
+          example: my-first-test-case
+        description:
+          type: string
+          example: This is my first test case
+        dry_run_key:
+          type: string
+          example: "XXXXX"
+    CaseOptResponse: 
+      type: object
+      properties:
+        key:
+          type: string
+          example: '10101010'
+        name:
+          type: string
+          example: my-first-test-case
+        description:
+          type: string
+          example: This is my first test case
+    CaseForValidate:
+      type: object
+      properties:
+        name:
+          type: string
+          example: my-first-test-case
+        description:
+          type: string
+          example: This is my first test case
+        file:
+          type: string
+          format: binary
+          description: |
+            At least two files
+            - code file
+            - meta file with .testany suffix at root path 
+    CaseForList:
+      type: object
+      properties:
+        key:
+          type: string
+          example: '10101010'
+        name:
+          type: string
+          example: my-first-test-case
+        description:
+          type: string
+          example: This is my first test case
+        environment:
+          type: string
+          example: 'Prod'
+        pipeline_number:
+          type: integer
+          format: int64
+        creator:
+          $ref: '#/components/schemas/User'
+    OptResult:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'Delete not allowd'
+        status:
+          type: integer
+          format: int64
+          description: >
+            1 -> success
+            2 -> failure
+    CaseDryRunResult:
+      type: object
+      properties:
+        dry_run_key:
+          type: string
+          example: "XXXXXX"
+          description: "Used for save test case, it contains case meta and dryrun result"
+        result:
+          type: integer
+          format: int64
+          enum: [1,2]
+          description: >
+            1 -> valid
+            2 -> invalid
+        message:
+          type: string
+          example: meta.json not found
+        dry_run_result:
+          $ref: '#/components/schemas/CaseResult'
+    
+    Case:
+      type: object
+      properties:
+        key:
+          type: string
+          example: "12345678"
+        name:
+          type: string
+          example: my-first-test-case
+        description:
+          type: string
+          example: "This is my first test case" 
+        url:
+          type: string
+          example: https://<gittoken>@github.com/abc/tree/dev
+        meta_path:
+          type: string
+          example: meta/meta.json
+        dry_run_result:
+          $ref: '#/components/schemas/CaseResult'
+        creator:
+          $ref: '#/components/schemas/User'
+    
+    
+    PipelineForCreate:
+      type: object
+      properties:
+        name:
+          type: string
+          example: my-first-test-case
+        description:
+          type: string
+          example: This is my first test case
+        dry_run_key:
+          type: string
+          example: "XXXXX"
+    PipelineOptResponse:
+      type: object
+      properties:
+        key:
+          type: string
+          example: 'WKS-0002'
+        name:
+          type: string
+          example: my-first-test-case
+        description:
+          type: string
+          example: This is my first test case
+        
+    
+    PipelineForValidate:
+      type: object
+      properties:
+        name:
+          type: string
+          example: my-first-test-case
+        description:
+          type: string
+          example: This is my first test case
+        file:
+          type: string
+          format: binary
+    
+    PipelineDryRunResult:
+      type: object
+      properties:
+        dry_run_key:
+          type: string
+          example: "XXXXXX"
+          description: "Used for save test case, it contains case meta and dryrun result"
+        name: 
+          type: string
+          example: "My second Pipeline"
+        description:
+          type: string
+          example: "This is my second Pipeline"
+        result:
+          type: integer
+          format: int64
+          enum: [1,2]
+          description: >
+            1 -> valid
+            2 -> invalid
+        message:
+          type: string
+          example: meta.json not found
+        dry_run_result:
+          $ref: '#/components/schemas/PipelineDryrunExecutionDetail'
+          
+    PipelineDryrunExecutionDetail:
+      type: object
+      properties:
+        start_time:
+          type: string
+          example: yyyy-mm-ddThh:mm:ssZ
+        finish_time:
+          type: string
+          example: yyyy-mm-ddThh:mm:ssZ
+        svg:
+          type: string
+          example: "<svg>xxxxx</svg>"
+        environments:
+          type: array
+          items: 
+            type: string
+            example: TMC
+        status:
+          type: integer
+          example: 0
+        executor:
+          $ref: '#/components/schemas/SystemUser'
+        cases:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseForExecution'
+    
+    
+    PipelineExecuteResponse:
+      type: object
+      properties:
+        execution_key:
+          type: string
+          example: "EPL-0001-00001"
+    
+    PipelineDetail:
+      type: object
+      properties:
+        key:
+          type: string
+          example: "WKS-0001"
+        name:
+          type: string
+          example: "my-first-pipeline"
+        description:
+          type: string
+          example: "this is my first pipeline"
+        creator:
+          $ref: '#/components/schemas/User'
+        planed_by:
+          $ref: '#/components/schemas/PlanForExecution'
+        dry_run_result:
+          $ref: '#/components/schemas/PipelineDryrunExecutionDetail'
+          
+        
+    PipelineForList:
+      type: object
+      properties:
+        key:
+          type: string
+          example: "WKS-0001"
+        name:
+          type: string
+          example: "my-first-pipeline"
+        description:
+          type: string
+          example: "this is my first pipeline"
+        environments:
+          type: array
+          items:
+            type: string
+            example: "STAGING"
+        creator:
+          $ref: '#/components/schemas/User'
+        last_execution:
+          type: object
+          properties:
+            key:
+              type: string
+              example: "WKS-0001-00001"
+            start_time:
+              type: string
+              example: "yyyy-mm-ddThh:mm:ssZ"
+            finish_time:
+              type: string
+              example: "yyyy-mm-ddThh:mm:ssZ"
+            status:
+              type: integer
+              enum: [0,1,2]
+              description: >
+                `0` - Running
+                `1` - Passed
+                `2` - Failed
+            executor:
+              $ref: '#/components/schemas/User'
+    
+              
+    CaseResult:
+      type: object
+      properties:
+        output:
+          type: string
+          example: Get xxxx.com suc
+        # type:
+        #   type: string
+        #   example: "collection/postman"
+        status:
+          type: integer
+          format: int64
+          description: >
+            engin_status: ["queued" "running"] -> 0 Running
+            engin_status: ["passed" "skipped"] -> 1 Passed
+            engin_status: ["failed" "aborted" "timeout"] -> 2 Failed
+        steps:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                example: "step1"
+              duration: 
+                type: string
+                example: "181ms"
+              status:
+                type: integer
+                format: int64
+                description: >
+                  engin_status: "passed" -> 1 Passed
+                  engin_status: "failed" -> 2 Failed
+              assertion_results:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name: 
+                      type: string
+                      example: "status code is 200"
+                    status: 
+                      type: integer
+                      format: int64
+                      description: >
+                        engin_status: "passed" -> 1 Passed
+                        engin_status: "failed" -> 2 Failed
+    
+    # PipelineDryRunResult:
+    #   type: object
+    #   properties:
+    #     result:
+    #       type: integer
+    #       format: int64
+    #       enum: [1,2]
+    #       description: >
+    #         1 -> valid
+    #         2 -> invalid
+    #     error_message:
+    #       type: string
+    #       example: meta.json not found
+    #     dry_run_results:
+    #       $ref: '#/components/schemas/PipelineResult'
+          
+    # PipelineResult:
+    #   type: object
+    #   properties:
+    #     cases:
+    #       type: array
+    #       item:
+    #         $ref
+            
+    ExecutionForList:
+      type: object
+      properties:
+        key:
+          type: string
+          example: "WKS-0001-00001"
+        start_time:
+          type: string
+          example: yyyy-mm-ddThh:mm:ssZ
+        finish_time:
+          type: string
+          example: yyyy-mm-ddThh:mm:ssZ
+        environments:
+          type: array
+          items: 
+            type: string
+            example: TMC
+        pipeline:
+          $ref: '#/components/schemas/PipelineForExecution'      
+        status:
+          type: integer
+          example: 0
+        planed_by:
+          $ref: '#/components/schemas/PlanForExecution'
+        executor:
+          $ref: '#/components/schemas/SystemUser'
+    
+    ExecutionForRefresh:
+      type: object
+      properties:
+        key:
+          type: string
+          example: "WKS-0001-00001"
+        svg:
+          type: string
+          example: "<svg>xxxxx</svg>"
+        status:
+          type: integer
+          example: 0
+        cases:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseForExecution'
+    
+    ExecutionDetail:
+      type: object
+      properties:
+        key:
+          type: string
+          example: "WKS-0001-00001"
+        start_time:
+          type: string
+          example: yyyy-mm-ddThh:mm:ssZ
+        finish_time:
+          type: string
+          example: yyyy-mm-ddThh:mm:ssZ
+        svg:
+          type: string
+          example: "<svg>xxxxx</svg>"
+        environments:
+          type: array
+          items: 
+            type: string
+            example: TMC
+        pipeline:
+          $ref: '#/components/schemas/PipelineForExecution'      
+        status:
+          type: integer
+          example: 0
+        planed_by:
+          $ref: '#/components/schemas/PlanForExecution'
+        executor:
+          $ref: '#/components/schemas/SystemUser'
+        cases:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseForExecution'
+    
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "10"
+        name:
+          type: string
+          example: Boyi Liang
+        email:
+          type: string
+          example: boyi.liang@testany.io      
+    SystemUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: System
+        email:
+          type: string
+          example: system@testany.io
+          
+    CaseFilter:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        key:
+          type: string
+          example: 11111111
+        name:
+          type: string
+          example: my-first-test-case
+    PipelineFilter:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        key:
+          type: string
+          example: WSB0001
+        name:
+          type: string
+          example: my-first-pipeline
+    PlanForExecution:
+      type: object
+      properties:
+        key:
+          type: string
+          example: P-WKS-0001
+        creator:
+          $ref: '#/components/schemas/User'
+        watcher:
+          type: array
+          items: 
+            $ref: '#/components/schemas/User'
+    PipelineForExecution:
+      type: object
+      properties:
+        key:
+          type: string
+          example: WKS-0001
+        name:
+          type: string
+          example: first-pipeline
+        description:
+          type: string
+          example: This is my first pipeline
+        creator:
+          $ref: '#/components/schemas/User'
+        #watcher:
+        #  type: array
+        #  items:
+        #    $ref: '#/components/schemas/User'
+    CaseForExecution:
+      type: object
+      properties:
+        key:
+          type: string
+          example: 10000001
+        name:
+          type: string
+          example: my-first-test-case
+        description:
+          type: string
+          example: This is my first test case
+        environment:
+          type: string
+          example: TMC
+        status:
+          type: integer
+          enum: [0,1,2]
+          description: >
+            `0` - Running
+            `1` - Passed
+            `2` - Failed
+        results:
+          $ref: '#/components/schemas/CaseResult'
+        creator:
+          $ref: '#/components/schemas/User' 
+  requestBodies:
+    Case:
+      description: Case object that needs to be added
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Case'
