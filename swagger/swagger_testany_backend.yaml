@@ -582,14 +582,14 @@ paths:
            required: false
            schema:
              type: string
-             format: "yyyy-mm-dd HH:MM:00"
+             example: "2023-08-15T11:22:33Z"
          - name: finish_time
            in: query
            description: execution happened before this time, exclude end_time
            required: false
            schema:
              type: string
-             format: "yyyy-mm-dd HH:MM:00"
+             example: "2023-08-15T11:22:33Z"
          - name: pipeline_creator_id
            in: query
            description: user id to return
@@ -1008,14 +1008,14 @@ paths:
           required: true
           schema:
             type: string
-            example: 'yyyy-MM-ddTHH:MM:SSZ'
+            example: "2023-08-15T11:22:33Z"
         - name: end_time
           in: query
           description: endTime of execution
           required: true
           schema:
             type: string
-            example: 'yyyy-MM-ddTHH:MM:SSZ'
+            example: "2023-08-15T11:22:33Z"
       responses:
         '200':
           description: Successful operation
@@ -1043,14 +1043,14 @@ paths:
           required: true
           schema:
             type: string
-            example: 'yyyy-MM-ddTHH:MM:SSZ'
+            example: "2023-08-15T11:22:33Z"
         - name: end_time
           in: query
           description: endTime of execution
           required: true
           schema:
             type: string
-            example: 'yyyy-MM-ddTHH:MM:SSZ'
+            example: "2023-08-15T11:22:33Z"
       responses:
         '200':
           description: Successful operation
@@ -1430,10 +1430,10 @@ components:
       properties:
         start_time:
           type: string
-          example: yyyy-mm-ddThh:mm:ssZ
+          example: "2023-08-15T11:22:33Z"
         finish_time:
           type: string
-          example: yyyy-mm-ddThh:mm:ssZ
+          example: "2023-08-15T11:22:33Z"
         svg:
           type: string
           example: "<svg>xxxxx</svg>"
@@ -1507,10 +1507,10 @@ components:
               example: "WKS-0001-00001"
             start_time:
               type: string
-              example: "yyyy-mm-ddThh:mm:ssZ"
+              example: "2023-08-15T11:22:33Z"
             finish_time:
               type: string
-              example: "yyyy-mm-ddThh:mm:ssZ"
+              example: "2023-08-15T11:22:33Z"
             status:
               type: integer
               enum: [0,1,2]
@@ -1602,10 +1602,10 @@ components:
           example: "WKS-0001-00001"
         start_time:
           type: string
-          example: yyyy-mm-ddThh:mm:ssZ
+          example: "2023-08-15T11:22:33Z"
         finish_time:
           type: string
-          example: yyyy-mm-ddThh:mm:ssZ
+          example: "2023-08-15T11:22:33Z"
         environments:
           type: array
           items: 
@@ -1646,10 +1646,10 @@ components:
           example: "WKS-0001-00001"
         start_time:
           type: string
-          example: yyyy-mm-ddThh:mm:ssZ
+          example: "2023-08-15T11:22:33Z"
         finish_time:
           type: string
-          example: yyyy-mm-ddThh:mm:ssZ
+          example: "2023-08-15T11:22:33Z"
         svg:
           type: string
           example: "<svg>xxxxx</svg>"
@@ -1787,3 +1787,4 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Case'
+
