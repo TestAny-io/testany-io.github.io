@@ -1363,6 +1363,9 @@ components:
     PipelineForCreate:
       type: object
       properties:
+        workspace:
+          type: string
+          example: 'WKS'
         name:
           type: string
           example: my-first-test-case
