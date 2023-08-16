@@ -37,6 +37,16 @@ _git-pushable-remote() {
   git remote set-url origin "https://ta-bitbucket-bot:${GIT_PUSH_APPKEY}@bitbucket.org/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}"
 }
 
+_git-merge() {
+  local base="$1"
+  local head="$2"
+  local head_commitid="$3"
+  echo git fetch origin "$base"
+  echo git checkout -b "$base" FETCH_HEAD
+  echo git merge "$head_commitid" --no-ff -m "(RELEASE)merge from $head to $base, $head version: $VERSION $4"
+  echo git push origin "$base"
+}
+
 _aws-assume-role() {
   export AWS_REGION="cn-northwest-1"
   export AWS_ROLE_ARN="${AWS_BITBUCKET_ARN}"
