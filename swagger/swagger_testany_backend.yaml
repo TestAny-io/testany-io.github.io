@@ -5,7 +5,7 @@ info:
     Testany backend API.
 
     ### Check out its awesome features:
-    
+
     * Show Case meta
     * Show Pipeline meta
     * Invoke Pipeline
@@ -22,14 +22,8 @@ servers:
 tags:
   - name: Case Management
     description: Operations about Case Metadata
-    #externalDocs:
-    #  description: Find out more
-    #  url: http://swagger.io
   - name: Pipeline Management
     description: Operations about Pipeline
-    #externalDocs:
-    #  description: Find out more
-    #  url: http://swagger.io
   - name: Execution Management
     description: Operations about Test Excecutions
   - name: Workspace Management
@@ -49,7 +43,7 @@ paths:
       description: Dry run Case
       operationId: dryRunCase
       requestBody:
-        description: >
+        description: |
           Dry run the test case
         content:
           multipart/form-data:
@@ -65,7 +59,6 @@ paths:
                 $ref: '#/components/schemas/CaseDryRunResult'
         '405':
           description: Validation exception
-  
   /case:
     post:
       tags:
@@ -89,8 +82,6 @@ paths:
                 $ref: '#/components/schemas/CaseOptResponse'
         '405':
           description: Invalid input
-
-          
   /case/filteListCases:
     get:
       tags:
@@ -106,11 +97,9 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/CaseFilter'          
-            
+                  $ref: '#/components/schemas/CaseFilter'
         '400':
           description: Invalid status value
-          
   /case/filteListCreators:
     get:
       tags:
@@ -126,17 +115,15 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/User'          
-            
+                  $ref: '#/components/schemas/User'
         '400':
           description: Invalid status value
-  
   /case/findMyCases:
     get:
       tags:
         - Case Management
       summary: List current user cases
-      description:  list current user created test cases
+      description: list current user created test cases
       operationId: listMyCases
       responses:
         '200':
@@ -146,11 +133,9 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/CaseForList'          
-            
+                  $ref: '#/components/schemas/CaseForList'
         '400':
           description: Invalid status value
-  
   /case/findCases:
     get:
       tags:
@@ -215,7 +200,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Case'          
+                $ref: '#/components/schemas/Case'
         '400':
           description: Invalid ID supplied
         '404':
@@ -267,17 +252,16 @@ paths:
           required: true
           schema:
             type: string
-            example: '10101010' 
+            example: '10101010'
       responses:
         '400':
           description: Invalid Case value
         '405':
           description: Validation exception
           content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/OptResult'
-  
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OptResult'
   /pipeline/dryRun:
     post:
       tags:
@@ -286,7 +270,7 @@ paths:
       description: Dry run Pipeline
       operationId: dryRunPipeline
       requestBody:
-        description: >
+        description: |
           Dry run the pipeline
         content:
           multipart/form-data:
@@ -302,7 +286,6 @@ paths:
                 $ref: '#/components/schemas/PipelineDryRunResult'
         '405':
           description: Validation exception
-          
   /pipeline:
     post:
       tags:
@@ -324,9 +307,6 @@ paths:
                 $ref: '#/components/schemas/PipelineOptResponse'
         '405':
           description: Invalid input
-
-
-  
   /pipeline/{key}:
     get:
       tags:
@@ -348,7 +328,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PipelineDetail'          
+                $ref: '#/components/schemas/PipelineDetail'
         '400':
           description: Invalid ID supplied
         '404':
@@ -400,11 +380,10 @@ paths:
           required: true
           schema:
             type: string
-            example: 'WKS-0001'
+            example: WKS-0001
       responses:
         '400':
           description: Invalid Case value
-          
   /pipeline/{key}/execute:
     post:
       tags:
@@ -426,13 +405,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PipelineExecuteResponse'          
+                $ref: '#/components/schemas/PipelineExecuteResponse'
         '400':
           description: Invalid ID supplied
         '404':
           description: Case not found
-    
-          
   /pipeline/filteListPipelines:
     get:
       tags:
@@ -441,13 +418,13 @@ paths:
       description: For Pre query, list a lite Pipelines to find out a specific Pipelines Key or Name in one workspace
       operationId: filterListPipelines
       parameters:
-         - name: workspace
-           in: query
-           description: key of workspace to return
-           required: true
-           schema:
-             type: string
-             example: "WKS"
+        - name: workspace
+          in: query
+          description: key of workspace to return
+          required: true
+          schema:
+            type: string
+            example: WKS
       responses:
         '200':
           description: successful operation
@@ -456,8 +433,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/PipelineFilter'          
-            
+                  $ref: '#/components/schemas/PipelineFilter'
         '400':
           description: Invalid status value
   /pipeline/filteListPipelineCreators:
@@ -468,13 +444,13 @@ paths:
       description: For Pre query, list a lite Pipeline Creators to find out a specific Pipeline Creators
       operationId: filterListPipelineCreators
       parameters:
-         - name: workspace
-           in: query
-           description: key of workspace to return
-           required: true
-           schema:
-             type: string
-             example: "WKS"
+        - name: workspace
+          in: query
+          description: key of workspace to return
+          required: true
+          schema:
+            type: string
+            example: WKS
       responses:
         '200':
           description: successful operation
@@ -483,11 +459,9 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/User'          
-            
+                  $ref: '#/components/schemas/User'
         '400':
           description: Invalid status value
-  
   /pipeline/filteListPlanCreators:
     get:
       tags:
@@ -496,13 +470,13 @@ paths:
       description: For Pre query, list the plan creator which create a plan used the pipelines in one workspace
       operationId: filterListPlanCreators
       parameters:
-         - name: workspace
-           in: query
-           description: key of workspace to return
-           required: true
-           schema:
-             type: string
-             example: "WKS"
+        - name: workspace
+          in: query
+          description: key of workspace to return
+          required: true
+          schema:
+            type: string
+            example: WKS
       responses:
         '200':
           description: successful operation
@@ -511,8 +485,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/User'          
-            
+                  $ref: '#/components/schemas/User'
         '400':
           description: Invalid status value
   /pipeline/findPipelines:
@@ -523,13 +496,13 @@ paths:
       description: List pipelines
       operationId: findPipelines
       parameters:
-         - name: workspace
-           in: query
-           description: key of workspace to return
-           required: true
-           schema:
-             type: string
-             example: "WKS"
+        - name: workspace
+          in: query
+          description: key of workspace to return
+          required: true
+          schema:
+            type: string
+            example: WKS
       responses:
         '200':
           description: successful operation
@@ -538,8 +511,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/PipelineForList'          
-            
+                  $ref: '#/components/schemas/PipelineForList'
         '400':
           description: Invalid status value
   /execution/findExecutions:
@@ -550,60 +522,64 @@ paths:
       description: List Executions by PipelineKey, ExecutionStatus, ExecutonTime, ExecutionEnvs,  PipelineCreator and PlanCreator
       operationId: findExecutions
       parameters:
-         - name: workspace
-           in: query
-           description: key of workspace to return
-           required: true
-           schema:
-             type: string
-             example: "WKS"
-         - name: pipeline_key
-           in: query
-           description: key of pipeline to return
-           required: false
-           schema:
-             type: string
-             example: "WKS-0001"
-         - name: status
-           in: query
-           required: false
-           schema:
-             type: integer
-             enum: [0,1,2,3]
-           description: >
+        - name: workspace
+          in: query
+          description: key of workspace to return
+          required: true
+          schema:
+            type: string
+            example: WKS
+        - name: pipeline_key
+          in: query
+          description: key of pipeline to return
+          required: false
+          schema:
+            type: string
+            example: WKS-0001
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: integer
+            enum:
+              - 0
+              - 1
+              - 2
+              - 3
+          description: |
             Status:
              * `0` - Running
              * `1` - Passed
              * `2` - Failed
              * `3` - Planed - used for upcomming status
-         - name: start_time
-           in: query
-           description: execution happened after this time, include start_time
-           required: false
-           schema:
-             type: string
-             example: "2023-08-15T11:22:33Z"
-         - name: finish_time
-           in: query
-           description: execution happened before this time, exclude end_time
-           required: false
-           schema:
-             type: string
-             example: "2023-08-15T11:22:33Z"
-         - name: pipeline_creator_id
-           in: query
-           description: user id to return
-           required: false
-           schema:
-             type: integer
-             format: int64
-         - name: plan_creator_id
-           in: query
-           description: user id to return
-           required: false
-           schema:
-             type: integer
-             format: int64
+        - name: start_time
+          in: query
+          description: execution happened after this time, include start_time
+          required: false
+          schema:
+            type: string
+            example: '2023-08-15T11:22:33Z'
+        - name: finish_time
+          in: query
+          description: execution happened before this time, exclude end_time
+          required: false
+          schema:
+            type: string
+            example: '2023-08-15T11:22:33Z'
+        - name: pipeline_creator_id
+          in: query
+          description: user id to return
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: plan_creator_id
+          in: query
+          description: user id to return
+          required: false
+          schema:
+            type: integer
+            format: int64
       responses:
         '200':
           description: successful operation
@@ -612,8 +588,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ExecutionForList'          
-            
+                  $ref: '#/components/schemas/ExecutionForList'
         '400':
           description: Invalid status value
   /execution/{execution_key}/refresh:
@@ -624,22 +599,20 @@ paths:
       description: List Executions by PipelineKey, ExecutionStatus, ExecutonTime, ExecutionEnvs,  PipelineCreator and PlanCreator
       operationId: refreshExecutionStatus
       parameters:
-         - name: execution_key
-           in: path
-           description: key of workspace to return
-           required: true
-           schema:
-             type: string
-             example: "WKS"
-         
+        - name: execution_key
+          in: path
+          description: key of workspace to return
+          required: true
+          schema:
+            type: string
+            example: WKS
       responses:
         '200':
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ExecutionForRefresh'          
-            
+                $ref: '#/components/schemas/ExecutionForRefresh'
         '400':
           description: Invalid status value
   /execution/{executionKey}:
@@ -650,63 +623,22 @@ paths:
       description: Get Execution Detail information
       operationId: getExecutionDetail
       parameters:
-         - name: executionKey
-           in: path
-           description: key of workspace to return
-           required: true
-           schema:
-             type: string
-             example: "WKS"
-         
+        - name: executionKey
+          in: path
+          description: key of workspace to return
+          required: true
+          schema:
+            type: string
+            example: WKS
       responses:
         '200':
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ExecutionDetail'          
-            
+                $ref: '#/components/schemas/ExecutionDetail'
         '400':
           description: Invalid status value
-  
-  # /workspace/keyValidate:
-  #   post:
-  #     tags:
-  #       - Workspace Management
-  #     summary: Check workspace key exists or not
-  #     description: Check workspace key exists or not
-  #     operationId: workspaceKeyValidation
-  #     requestBody:
-  #       description: Check workspace key exists or not
-  #       content:
-  #         application/json:
-  #           schema:
-  #             type: object
-  #             properties:
-  #               key:
-  #                 type: string
-  #                 example: 'WKS'
-  #       required: true
-  #     responses:
-  #       '200':
-  #         description: Successful operation
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 status:
-  #                   type: integer
-  #                   format: int64
-  #                   description: >
-  #                     1 -> unique
-  #                     2 -> duplicate
-  #                 message:
-  #                   type: string
-  #                   example: 'key exists'
-  #       '405':
-  #         description: Invalid input
-          
   /workspace:
     post:
       tags:
@@ -753,7 +685,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/WorkspaceDetail'
         '405':
-          description: Invalid input      
+          description: Invalid input
     patch:
       tags:
         - Workspace Management
@@ -768,7 +700,6 @@ paths:
           schema:
             type: string
             example: WKS
-      
       requestBody:
         description: Update a Workspace
         content:
@@ -784,7 +715,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Workspace'
         '405':
-          description: Invalid input      
+          description: Invalid input
   /workspace/findWorkspaces:
     get:
       tags:
@@ -803,7 +734,6 @@ paths:
                   $ref: '#/components/schemas/WorkspaceDetail'
         '405':
           description: Invalid input
-  
   /plan:
     post:
       tags:
@@ -850,7 +780,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/PlanForDetail'
         '405':
-          description: Invalid input      
+          description: Invalid input
     patch:
       tags:
         - Plan Management
@@ -865,7 +795,6 @@ paths:
           schema:
             type: string
             example: P-WKS-0001
-      
       requestBody:
         description: Update a Plan
         content:
@@ -877,7 +806,7 @@ paths:
         '200':
           description: Successful operation
         '405':
-          description: Invalid input    
+          description: Invalid input
     delete:
       tags:
         - Plan Management
@@ -891,17 +820,16 @@ paths:
           required: true
           schema:
             type: string
-            format: 'P-WKS-0001'
+            format: P-WKS-0001
       responses:
         '400':
           description: Invalid value
         '405':
           description: Validation exception
           content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/OptResult'
-          
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OptResult'
   /plan/findPlans:
     get:
       tags:
@@ -910,13 +838,13 @@ paths:
       description: Get a Plan List
       operationId: listPlan
       parameters:
-         - name: workspace
-           in: query
-           description: key of workspace to return
-           required: true
-           schema:
-             type: string
-             example: "WKS"
+        - name: workspace
+          in: query
+          description: key of workspace to return
+          required: true
+          schema:
+            type: string
+            example: WKS
       responses:
         '200':
           description: Successful operation
@@ -950,7 +878,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  id: 
+                  id:
                     type: string
                     example: boyi.liang@testany.io
         '405':
@@ -973,7 +901,6 @@ paths:
                   $ref: '#/components/schemas/UserForFilter'
         '405':
           description: Invalid input
-  
   /metering/workspace:
     get:
       tags:
@@ -1008,14 +935,14 @@ paths:
           required: true
           schema:
             type: string
-            example: "2023-08-15T11:22:33Z"
+            example: '2023-08-15T11:22:33Z'
         - name: end_time
           in: query
           description: endTime of execution
           required: true
           schema:
             type: string
-            example: "2023-08-15T11:22:33Z"
+            example: '2023-08-15T11:22:33Z'
       responses:
         '200':
           description: Successful operation
@@ -1043,14 +970,14 @@ paths:
           required: true
           schema:
             type: string
-            example: "2023-08-15T11:22:33Z"
+            example: '2023-08-15T11:22:33Z'
         - name: end_time
           in: query
           description: endTime of execution
           required: true
           schema:
             type: string
-            example: "2023-08-15T11:22:33Z"
+            example: '2023-08-15T11:22:33Z'
       responses:
         '200':
           description: Successful operation
@@ -1071,74 +998,72 @@ components:
       properties:
         id:
           type: string
-          example: 'xxxxxxxxxxx'
+          example: xxxxxxxxxxx
           description: |
             Different SSO Vendor provide different values
             - Ford -> sub
             - Office 365 -> sub
         type:
           type: string
-          enum: ["user","testany","cicd",'webex_space']
+          enum:
+            - user
+            - testany
+            - cicd
+            - webex_space
         name:
           type: string
-          example: 'Boyi Liang'
+          example: Boyi Liang
           description: |
             Different SSO Vendor provide different values
             - Ford -> givenname+' '+ surname
             - Office 365 -> name
         email:
           type: string
-          example: 'boyi.liang@testany.io'
+          example: boyi.liang@testany.io
           description: |
             Different SSO Vendor provide different values
             - Ford -> emailaddress
             - Office 365 -> upn
         avatar:
           type: string
-          example: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-        
+          example: https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80
     UserForFilter:
       type: object
       properties:
         id:
           type: string
-          example: 'xxxxxxxxxxx'
+          example: xxxxxxxxxxx
         name:
           type: string
-          example: 'Boyi Liang'
+          example: Boyi Liang
         email:
           type: string
-          example: 'boyi.liang@testany.io'
-          
-        
-    
+          example: boyi.liang@testany.io
     PlanForOpt:
       type: object
       properties:
         name:
           type: string
-          example: 'My first plan'
+          example: My first plan
         description:
           type: string
-          example: 'This is my first plan'
+          example: This is my first plan
         schedule_expr:
           type: string
           example: '* * * * *'
         schedule_str:
           type: string
-          example: 'Every day 31'
+          example: Every day 31
         pipelines:
           type: array
           items:
             $ref: '#/components/schemas/PipelineForPlanOpt'
-            
     PlanCreateResponse:
       type: object
       properties:
         key:
           type: string
           example: P-WKS-0001
-            
     PlanForList:
       type: object
       properties:
@@ -1147,14 +1072,13 @@ components:
           example: P-WKS-0001
         name:
           type: string
-          example: 'My first plan'
+          example: My first plan
         description:
           type: string
-          example: 'This is my first plan'
+          example: This is my first plan
         schedule_str:
           type: string
-          example: 'Every day 31st'
-          
+          example: Every day 31st
     PlanForDetail:
       type: object
       properties:
@@ -1163,21 +1087,20 @@ components:
           example: P-WKS-0001
         name:
           type: string
-          example: 'My first plan'
+          example: My first plan
         description:
           type: string
-          example: 'This is my first plan'
+          example: This is my first plan
         schedule_expr:
           type: string
           example: '* * * * *'
         schedule_str:
           type: string
-          example: 'Every day 31'
+          example: Every day 31
         pipelines:
           type: array
           items:
             $ref: '#/components/schemas/PipelineForPlan'
-    
     PipelineForPlanOpt:
       type: object
       properties:
@@ -1188,8 +1111,7 @@ components:
           type: array
           items:
             type: string
-            example: "10"
-            
+            example: '10'
     PipelineForPlan:
       type: object
       properties:
@@ -1208,8 +1130,7 @@ components:
         watchers:
           type: array
           items:
-            $ref: '#/components/schemas/User' 
-            
+            $ref: '#/components/schemas/User'
     Workspace:
       type: object
       properties:
@@ -1243,7 +1164,6 @@ components:
         description:
           type: string
           example: WKS
-          
     CaseForCreate:
       type: object
       properties:
@@ -1255,8 +1175,8 @@ components:
           example: This is my first test case
         dry_run_key:
           type: string
-          example: "XXXXX"
-    CaseOptResponse: 
+          example: XXXXX
+    CaseOptResponse:
       type: object
       properties:
         key:
@@ -1298,7 +1218,7 @@ components:
           example: This is my first test case
         environment:
           type: string
-          example: 'Prod'
+          example: Prod
         pipeline_number:
           type: integer
           format: int64
@@ -1309,63 +1229,60 @@ components:
       properties:
         message:
           type: string
-          example: 'Delete not allowd'
+          example: Delete not allowd
         status:
           type: integer
           format: int64
-          description: >
-            1 -> success
-            2 -> failure
+          description: |
+            1 -> success 2 -> failure
     CaseDryRunResult:
       type: object
       properties:
         dry_run_key:
           type: string
-          example: "XXXXXX"
-          description: "Used for save test case, it contains case meta and dryrun result"
+          example: XXXXXX
+          description: Used for save test case, it contains case meta and dryrun result
         result:
           type: integer
           format: int64
-          enum: [1,2]
-          description: >
-            1 -> valid
-            2 -> invalid
+          enum:
+            - 1
+            - 2
+          description: |
+            1 -> valid 2 -> invalid
         message:
           type: string
           example: meta.json not found
         dry_run_result:
           $ref: '#/components/schemas/CaseResult'
-    
     Case:
       type: object
       properties:
         key:
           type: string
-          example: "12345678"
+          example: '12345678'
         name:
           type: string
           example: my-first-test-case
         description:
           type: string
-          example: "This is my first test case" 
-        url:
+          example: This is my first test case
+        framework:
           type: string
-          example: https://<gittoken>@github.com/abc/tree/dev
-        meta_path:
+          example: 'postman/collection'
+        environment:
           type: string
-          example: meta/meta.json
+          example: 'prod'
         dry_run_result:
           $ref: '#/components/schemas/CaseResult'
         creator:
           $ref: '#/components/schemas/User'
-    
-    
     PipelineForCreate:
       type: object
       properties:
         workspace:
           type: string
-          example: 'WKS'
+          example: WKS
         name:
           type: string
           example: my-first-test-case
@@ -1374,21 +1291,19 @@ components:
           example: This is my first test case
         dry_run_key:
           type: string
-          example: "XXXXX"
+          example: XXXXX
     PipelineOptResponse:
       type: object
       properties:
         key:
           type: string
-          example: 'WKS-0002'
+          example: WKS-0002
         name:
           type: string
           example: my-first-test-case
         description:
           type: string
           example: This is my first test case
-        
-    
     PipelineForValidate:
       type: object
       properties:
@@ -1401,48 +1316,47 @@ components:
         file:
           type: string
           format: binary
-    
     PipelineDryRunResult:
       type: object
       properties:
         dry_run_key:
           type: string
-          example: "XXXXXX"
-          description: "Used for save test case, it contains case meta and dryrun result"
-        name: 
+          example: XXXXXX
+          description: Used for save test case, it contains case meta and dryrun result
+        name:
           type: string
-          example: "My second Pipeline"
+          example: My second Pipeline
         description:
           type: string
-          example: "This is my second Pipeline"
+          example: This is my second Pipeline
         result:
           type: integer
           format: int64
-          enum: [1,2]
-          description: >
-            1 -> valid
-            2 -> invalid
+          enum:
+            - 1
+            - 2
+          description: |
+            1 -> valid 2 -> invalid
         message:
           type: string
           example: meta.json not found
         dry_run_result:
           $ref: '#/components/schemas/PipelineDryrunExecutionDetail'
-          
     PipelineDryrunExecutionDetail:
       type: object
       properties:
         start_time:
           type: string
-          example: "2023-08-15T11:22:33Z"
+          example: '2023-08-15T11:22:33Z'
         finish_time:
           type: string
-          example: "2023-08-15T11:22:33Z"
+          example: '2023-08-15T11:22:33Z'
         svg:
           type: string
-          example: "<svg>xxxxx</svg>"
+          example: <svg>xxxxx</svg>
         environments:
           type: array
-          items: 
+          items:
             type: string
             example: TMC
         status:
@@ -1454,52 +1368,47 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CaseForExecution'
-    
-    
     PipelineExecuteResponse:
       type: object
       properties:
         execution_key:
           type: string
-          example: "EPL-0001-00001"
-    
+          example: EPL-0001-00001
     PipelineDetail:
       type: object
       properties:
         key:
           type: string
-          example: "WKS-0001"
+          example: WKS-0001
         name:
           type: string
-          example: "my-first-pipeline"
+          example: my-first-pipeline
         description:
           type: string
-          example: "this is my first pipeline"
+          example: this is my first pipeline
         creator:
           $ref: '#/components/schemas/User'
         planed_by:
           $ref: '#/components/schemas/PlanForExecution'
         dry_run_result:
           $ref: '#/components/schemas/PipelineDryrunExecutionDetail'
-          
-        
     PipelineForList:
       type: object
       properties:
         key:
           type: string
-          example: "WKS-0001"
+          example: WKS-0001
         name:
           type: string
-          example: "my-first-pipeline"
+          example: my-first-pipeline
         description:
           type: string
-          example: "this is my first pipeline"
+          example: this is my first pipeline
         environments:
           type: array
           items:
             type: string
-            example: "STAGING"
+            example: STAGING
         creator:
           $ref: '#/components/schemas/User'
         last_execution:
@@ -1507,40 +1416,34 @@ components:
           properties:
             key:
               type: string
-              example: "WKS-0001-00001"
+              example: WKS-0001-00001
             start_time:
               type: string
-              example: "2023-08-15T11:22:33Z"
+              example: '2023-08-15T11:22:33Z'
             finish_time:
               type: string
-              example: "2023-08-15T11:22:33Z"
+              example: '2023-08-15T11:22:33Z'
             status:
               type: integer
-              enum: [0,1,2]
-              description: >
-                `0` - Running
-                `1` - Passed
-                `2` - Failed
+              enum:
+                - 0
+                - 1
+                - 2
+              description: |
+                `0` - Running `1` - Passed `2` - Failed
             executor:
               $ref: '#/components/schemas/User'
-    
-              
     CaseResult:
       type: object
       properties:
         output:
           type: string
           example: Get xxxx.com suc
-        # type:
-        #   type: string
-        #   example: "collection/postman"
         status:
           type: integer
           format: int64
-          description: >
-            engin_status: ["queued" "running"] -> 0 Running
-            engin_status: ["passed" "skipped"] -> 1 Passed
-            engin_status: ["failed" "aborted" "timeout"] -> 2 Failed
+          description: |
+            engin_status: ["queued" "running"] -> 0 Running engin_status: ["passed" "skipped"] -> 1 Passed engin_status: ["failed" "aborted" "timeout"] -> 2 Failed
         steps:
           type: array
           items:
@@ -1548,74 +1451,47 @@ components:
             properties:
               name:
                 type: string
-                example: "step1"
-              duration: 
+                example: step1
+              duration:
                 type: string
-                example: "181ms"
+                example: 181ms
               status:
                 type: integer
                 format: int64
-                description: >
-                  engin_status: "passed" -> 1 Passed
-                  engin_status: "failed" -> 2 Failed
+                description: |
+                  engin_status: "passed" -> 1 Passed engin_status: "failed" -> 2 Failed
               assertion_results:
                 type: array
                 items:
                   type: object
                   properties:
-                    name: 
+                    name:
                       type: string
-                      example: "status code is 200"
-                    status: 
+                      example: status code is 200
+                    status:
                       type: integer
                       format: int64
-                      description: >
-                        engin_status: "passed" -> 1 Passed
-                        engin_status: "failed" -> 2 Failed
-    
-    # PipelineDryRunResult:
-    #   type: object
-    #   properties:
-    #     result:
-    #       type: integer
-    #       format: int64
-    #       enum: [1,2]
-    #       description: >
-    #         1 -> valid
-    #         2 -> invalid
-    #     error_message:
-    #       type: string
-    #       example: meta.json not found
-    #     dry_run_results:
-    #       $ref: '#/components/schemas/PipelineResult'
-          
-    # PipelineResult:
-    #   type: object
-    #   properties:
-    #     cases:
-    #       type: array
-    #       item:
-    #         $ref
-            
+                      description: |
+                        engin_status: "passed" -> 1 Passed engin_status: "failed" -> 2 Failed
     ExecutionForList:
       type: object
       properties:
         key:
           type: string
-          example: "WKS-0001-00001"
+          example: WKS-0001-00001
         start_time:
           type: string
-          example: "2023-08-15T11:22:33Z"
+          example: '2023-08-15T11:22:33Z'
         finish_time:
           type: string
-          example: "2023-08-15T11:22:33Z"
+          example: '2023-08-15T11:22:33Z'
         environments:
           type: array
-          items: 
+          items:
             type: string
             example: TMC
         pipeline:
-          $ref: '#/components/schemas/PipelineForExecution'      
+          $ref: '#/components/schemas/PipelineForExecution'
         status:
           type: integer
           example: 0
@@ -1623,16 +1499,15 @@ components:
           $ref: '#/components/schemas/PlanForExecution'
         executor:
           $ref: '#/components/schemas/SystemUser'
-    
     ExecutionForRefresh:
       type: object
       properties:
         key:
           type: string
-          example: "WKS-0001-00001"
+          example: WKS-0001-00001
         svg:
           type: string
-          example: "<svg>xxxxx</svg>"
+          example: <svg>xxxxx</svg>
         status:
           type: integer
           example: 0
@@ -1640,29 +1515,28 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CaseForExecution'
-    
     ExecutionDetail:
       type: object
       properties:
         key:
           type: string
-          example: "WKS-0001-00001"
+          example: WKS-0001-00001
         start_time:
           type: string
-          example: "2023-08-15T11:22:33Z"
+          example: '2023-08-15T11:22:33Z'
         finish_time:
           type: string
-          example: "2023-08-15T11:22:33Z"
+          example: '2023-08-15T11:22:33Z'
         svg:
           type: string
-          example: "<svg>xxxxx</svg>"
+          example: <svg>xxxxx</svg>
         environments:
           type: array
-          items: 
+          items:
             type: string
             example: TMC
         pipeline:
-          $ref: '#/components/schemas/PipelineForExecution'      
+          $ref: '#/components/schemas/PipelineForExecution'
         status:
           type: integer
           example: 0
@@ -1674,19 +1548,21 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CaseForExecution'
-    
     User:
       type: object
       properties:
         id:
           type: string
-          example: "10"
+          example: '10'
         name:
           type: string
           example: Boyi Liang
         email:
           type: string
-          example: boyi.liang@testany.io      
+          example: boyi.liang@testany.io
+        avatar:
+          type: string
+          example: https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80
     SystemUser:
       type: object
       properties:
@@ -1700,7 +1576,6 @@ components:
         email:
           type: string
           example: system@testany.io
-          
     CaseFilter:
       type: object
       properties:
@@ -1737,7 +1612,7 @@ components:
           $ref: '#/components/schemas/User'
         watcher:
           type: array
-          items: 
+          items:
             $ref: '#/components/schemas/User'
     PipelineForExecution:
       type: object
@@ -1753,10 +1628,6 @@ components:
           example: This is my first pipeline
         creator:
           $ref: '#/components/schemas/User'
-        #watcher:
-        #  type: array
-        #  items:
-        #    $ref: '#/components/schemas/User'
     CaseForExecution:
       type: object
       properties:
@@ -1774,15 +1645,16 @@ components:
           example: TMC
         status:
           type: integer
-          enum: [0,1,2]
-          description: >
-            `0` - Running
-            `1` - Passed
-            `2` - Failed
+          enum:
+            - 0
+            - 1
+            - 2
+          description: |
+            `0` - Running `1` - Passed `2` - Failed
         results:
           $ref: '#/components/schemas/CaseResult'
         creator:
-          $ref: '#/components/schemas/User' 
+          $ref: '#/components/schemas/User'
   requestBodies:
     Case:
       description: Case object that needs to be added
