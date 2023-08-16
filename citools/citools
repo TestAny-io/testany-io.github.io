@@ -58,6 +58,40 @@ _aws-assume-role() {
   export -p | grep AWS
 }
 
+_get-issuekey() {
+  local comment=$(git log -1 --format=%B)
+  local issue_key=$(echo "$comment" | head -n 1 | grep -oP '\w+-\d+')
+  echo -n "$issue_key"
+}
+
+_send-event() {
+  local step="$1"
+  local status="successful"
+  if [[ ${BITBUCKET_EXIT_CODE} -ne 0 ]]; then
+    status="failed"
+  fi
+  local body='{
+  "buildnum":"'${BITBUCKET_BUILD_NUMBER}'",
+  "repo":"'${BITBUCKET_REPO_SLUG}'",
+  "branch": "'${BITBUCKET_BRANCH}'",
+  "exitcode": "'${BITBUCKET_EXIT_CODE}'",
+  "env":"'${BITBUCKET_DEPLOYMENT_ENVIRONMENT}'",
+  "step": "'${step}'",
+  "status":"'${status}'",
+  "version": "'$(_get-version)'",
+  "issuekey": "'$(_get-issuekey)'"}'
+
+  echo "$body"
+  if [[ "$step" == "unittest" ]]; then
+    local url='https://automation.atlassian.com/pro/hooks/9732c7cbf398a8635c0d7fc49d0c0320fd46c271'
+  elif [[ "$step" == "build" ]]; then
+    local url='https://automation.atlassian.com/pro/hooks/04a5cef121a8471b08a8c0f87d2da1241894e929'
+  elif [[ "$step" == "integration" ]]; then
+    local url='https://automation.atlassian.com/pro/hooks/51a36f6505505fa7edf14d820d27d66634298a90'
+  fi
+  curl -s -X POST -H 'Content-Type: application/json' -d "$body" "$url"
+}
+
 _help() {
     declare -F | while read line;
     do
