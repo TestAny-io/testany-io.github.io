@@ -72,6 +72,7 @@ _send-event() {
   fi
   local body='{
   "buildnum":"'${BITBUCKET_BUILD_NUMBER}'",
+  "url":"https://bitbucket.org/'${BITBUCKET_REPO_FULL_NAME}'/pipelines/results/'${BITBUCKET_BUILD_NUMBER}'",
   "repo":"'${BITBUCKET_REPO_SLUG}'",
   "branch": "'${BITBUCKET_BRANCH}'",
   "exitcode": "'${BITBUCKET_EXIT_CODE}'",
