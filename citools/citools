@@ -42,9 +42,10 @@ _git-merge() {
   local head="$2"
   local head_commitid="$3"
   local version=$(_get-version)
+  local issuekey=$(_get-issuekey)
   git fetch origin "$base"
   git checkout -b "$base" FETCH_HEAD
-  git merge "$head_commitid" --no-ff -m "(RELEASE)merge from $head to $base, $head version: $version $4"
+  git merge "$head_commitid" --no-ff -m "(RELEASE)[$issuekey]merge from $head to $base, $head version: $version $4"
   git push origin "$base"
 }
 
