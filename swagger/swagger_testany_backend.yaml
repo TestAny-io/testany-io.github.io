@@ -410,7 +410,7 @@ paths:
           description: Invalid ID supplied
         '404':
           description: Case not found
-  /pipeline/filteListPipelines:
+  /pipeline/filterListPipelines:
     get:
       tags:
         - Pipeline Management
@@ -625,7 +625,7 @@ paths:
       parameters:
         - name: executionKey
           in: path
-          description: key of workspace to return
+          description: key of execution to return
           required: true
           schema:
             type: string
@@ -637,6 +637,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ExecutionDetail'
+        '400':
+          description: Invalid status value
+  /execution/{executionKey}/caseExecutionDetail/{index}:
+    get:
+      tags:
+        - Execution Management
+      summary: Get Execution Detail
+      description: Get Execution Detail information
+      operationId: getCaseExecutionDetail
+      parameters:
+        - name: executionKey
+          in: path
+          description: key of execution
+          required: true
+          schema:
+            type: string
+            example: WKS
+        - name: index
+          in: path
+          description: index of case
+          required: true
+          schema:
+            type: string
+            example: WKS
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    $ref: '#/components/schemas/CaseResult'
         '400':
           description: Invalid status value
   /workspace:
@@ -1329,6 +1363,11 @@ components:
         description:
           type: string
           example: This is my second Pipeline
+        environments:
+          type: array
+          items:
+            type: string
+            example: TMC
         result:
           type: integer
           format: int64
@@ -1345,29 +1384,13 @@ components:
     PipelineDryrunExecutionDetail:
       type: object
       properties:
-        start_time:
-          type: string
-          example: '2023-08-15T11:22:33Z'
-        finish_time:
-          type: string
-          example: '2023-08-15T11:22:33Z'
         svg:
           type: string
           example: <svg>xxxxx</svg>
-        environments:
-          type: array
-          items:
-            type: string
-            example: TMC
-        status:
-          type: integer
-          example: 0
-        executor:
-          $ref: '#/components/schemas/SystemUser'
         cases:
           type: array
           items:
-            $ref: '#/components/schemas/CaseForExecution'
+            $ref: '#/components/schemas/CaseForPipelineDryRunExecution'
     PipelineExecuteResponse:
       type: object
       properties:
@@ -1592,10 +1615,6 @@ components:
     PipelineFilter:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-          example: 10
         key:
           type: string
           example: WSB0001
@@ -1628,9 +1647,29 @@ components:
           example: This is my first pipeline
         creator:
           $ref: '#/components/schemas/User'
+    CaseForPipelineDryRunExecution:
+      type: object
+      properties:
+        key:
+          type: string
+          example: 10000001
+        name:
+          type: string
+          example: my-first-test-case
+        description:
+          type: string
+          example: This is my first test case
+        environment:
+          type: string
+          example: TMC
+        creator:
+          $ref: '#/components/schemas/User'
     CaseForExecution:
       type: object
       properties:
+        index:
+          type: integer
+          example: 0
         key:
           type: string
           example: 10000001
@@ -1651,8 +1690,8 @@ components:
             - 2
           description: |
             `0` - Running `1` - Passed `2` - Failed
-        results:
-          $ref: '#/components/schemas/CaseResult'
+        # results:
+        #   $ref: '#/components/schemas/CaseResult'
         creator:
           $ref: '#/components/schemas/User'
   requestBodies:
