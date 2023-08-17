@@ -59,6 +59,30 @@ paths:
                 $ref: '#/components/schemas/CaseDryRunResult'
         '405':
           description: Validation exception
+  /case/dryRun/{key}:
+    get:
+      tags:
+        - Case Management
+      summary: Dry run Case
+      description: Dry run Case
+      operationId: getDryRunCaseDetail
+      parameters:
+        - name: key
+          in: path
+          description: string
+          schema:
+            type: string
+            example: 12345678
+          required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseForDryRun'
+        '405':
+          description: Validation exception
   /case:
     post:
       tags:
@@ -284,6 +308,30 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PipelineDryRunResult'
+        '405':
+          description: Validation exception
+  /pipeline/dryRun/{key}:
+    get:
+      tags:
+        - Pipeline Management
+      summary: Dry run Pipeline
+      description: Dry run Pipeline
+      operationId: getDryRunPipeline
+      parameters:
+        - name: key
+          in: path
+          description: key of pipeline to return
+          required: true
+          schema:
+            type: string
+            example: 12345678
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PipelineDryRunResultDetail'
         '405':
           description: Validation exception
   /pipeline:
@@ -1039,6 +1087,24 @@ components:
         pipeline_exec_count:
           type: object
           properties:
+            begin_time:
+              type: string
+              example: "2023-08-15T11:22:33Z"
+            end_time:
+              type: string
+              example: "2023-08-15T11:22:33Z"
+        case_exec_count:
+          type: object
+          properties:
+            begin_time:
+              type: string
+              example: "2023-08-15T11:22:33Z"
+            end_time:
+              type: string
+              example: "2023-08-15T11:22:33Z"
+        workspace_pipeline_exec_count:
+          type: object
+          properties:
             workspace:
               type: string
               example: "WKS"
@@ -1048,7 +1114,7 @@ components:
             end_time:
               type: string
               example: "2023-08-15T11:22:33Z"
-        case_exec_count:
+        workspace_case_exec_count:
           type: object
           properties:
             workspace:
@@ -1333,12 +1399,32 @@ components:
         message:
           type: string
           example: meta.json not found
-        dry_run_result:
-          $ref: '#/components/schemas/CaseResult'
     Case:
       type: object
       properties:
         key:
+          type: string
+          example: '12345678'
+        name:
+          type: string
+          example: my-first-test-case
+        description:
+          type: string
+          example: This is my first test case
+        framework:
+          type: string
+          example: 'postman/collection'
+        environment:
+          type: string
+          example: 'prod'
+        dry_run_result:
+          $ref: '#/components/schemas/CaseResult'
+        creator:
+          $ref: '#/components/schemas/User'
+    CaseForDryRun:
+      type: object
+      properties:
+        dry_run_key:
           type: string
           example: '12345678'
         name:
@@ -1425,8 +1511,27 @@ components:
         message:
           type: string
           example: meta.json not found
+    PipelineDryRunResultDetail:
+      type: object
+      properties:
+        dry_run_key:
+          type: string
+          example: XXXXXX
+          description: Used for save test case, it contains case meta and dryrun result
+        name:
+          type: string
+          example: My second Pipeline
+        description:
+          type: string
+          example: This is my second Pipeline
+        environments:
+          type: array
+          items:
+            type: string
+            example: TMC
         dry_run_result:
           $ref: '#/components/schemas/PipelineDryrunExecutionDetail'
+          
     PipelineDryrunExecutionDetail:
       type: object
       properties:
@@ -1747,4 +1852,5 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Case'
+
 
