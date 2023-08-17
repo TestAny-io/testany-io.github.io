@@ -935,98 +935,144 @@ paths:
                   $ref: '#/components/schemas/UserForFilter'
         '405':
           description: Invalid input
-  /metering/workspace:
-    get:
+  /metering:
+    post:
       tags:
         - Metering Query
       summary: List count
       description: List count
-      operationId: listWorkspaceCount
+      operationId: listRelatedCount
+      requestBody:
+        description: Show metering data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeteringRequest'
+        required: true
       responses:
         '200':
           description: Successful operation
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  count:
-                    type: integer
-                    format: int64
+                $ref: '#/components/schemas/MeteringRequestResponse'
         '405':
           description: Invalid input
-  /metering/pipelineExecution:
-    get:
-      tags:
-        - Metering Query
-      summary: List count
-      description: List count
-      operationId: listPipelineExecutionCount
-      parameters:
-        - name: begin_time
-          in: query
-          description: beginTime of execution
-          required: true
-          schema:
-            type: string
-            example: '2023-08-15T11:22:33Z'
-        - name: end_time
-          in: query
-          description: endTime of execution
-          required: true
-          schema:
-            type: string
-            example: '2023-08-15T11:22:33Z'
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  count:
-                    type: integer
-                    format: int64
-        '405':
-          description: Invalid input
-  /metering/caseExecution:
-    get:
-      tags:
-        - Metering Query
-      summary: List count
-      description: List count
-      operationId: listCaseExecutionCount
-      parameters:
-        - name: begin_time
-          in: query
-          description: beginTime of execution
-          required: true
-          schema:
-            type: string
-            example: '2023-08-15T11:22:33Z'
-        - name: end_time
-          in: query
-          description: endTime of execution
-          required: true
-          schema:
-            type: string
-            example: '2023-08-15T11:22:33Z'
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  count:
-                    type: integer
-                    format: int64
-        '405':
-          description: Invalid input
+  # /metering/pipelineExecution:
+  #   get:
+  #     tags:
+  #       - Metering Query
+  #     summary: List count
+  #     description: List count
+  #     operationId: listPipelineExecutionCount
+  #     parameters:
+  #       - name: begin_time
+  #         in: query
+  #         description: beginTime of execution
+  #         required: true
+  #         schema:
+  #           type: string
+  #           example: '2023-08-15T11:22:33Z'
+  #       - name: end_time
+  #         in: query
+  #         description: endTime of execution
+  #         required: true
+  #         schema:
+  #           type: string
+  #           example: '2023-08-15T11:22:33Z'
+  #     responses:
+  #       '200':
+  #         description: Successful operation
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: object
+  #               properties:
+  #                 count:
+  #                   type: integer
+  #                   format: int64
+  #       '405':
+  #         description: Invalid input
+  # /metering/caseExecution:
+  #   get:
+  #     tags:
+  #       - Metering Query
+  #     summary: List count
+  #     description: List count
+  #     operationId: listCaseExecutionCount
+  #     parameters:
+  #       - name: begin_time
+  #         in: query
+  #         description: beginTime of execution
+  #         required: true
+  #         schema:
+  #           type: string
+  #           example: '2023-08-15T11:22:33Z'
+  #       - name: end_time
+  #         in: query
+  #         description: endTime of execution
+  #         required: true
+  #         schema:
+  #           type: string
+  #           example: '2023-08-15T11:22:33Z'
+  #     responses:
+  #       '200':
+  #         description: Successful operation
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: object
+  #               properties:
+  #                 count:
+  #                   type: integer
+  #                   format: int64
+  #       '405':
+  #         description: Invalid input
 components:
   schemas:
+    MeteringRequest:
+      type: object
+      properties:
+        workspace_count:
+          type: object
+          example: {}
+        pipeline_exec_count:
+          type: object
+          properties:
+            workspace:
+              type: string
+              example: "WKS"
+            begin_time:
+              type: string
+              example: "2023-08-15T11:22:33Z"
+            end_time:
+              type: string
+              example: "2023-08-15T11:22:33Z"
+        case_exec_count:
+          type: object
+          properties:
+            workspace:
+              type: string
+              example: "WKS"
+            begin_time:
+              type: string
+              example: "2023-08-15T11:22:33Z"
+            end_time:
+              type: string
+              example: "2023-08-15T11:22:33Z"
+    MeteringRequestResponse:
+      type: object
+      properties:
+        workspace_count: 
+          type: integer
+          example: 0
+        pipeline_exec_count:
+          type: integer
+          example: 0
+        case_exec_count:
+          type: integer
+          example: 0
+          
     UserForCreate:
       type: object
       properties:
