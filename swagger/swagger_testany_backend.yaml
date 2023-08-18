@@ -1278,6 +1278,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PipelineForPlan'
+        creator:
+          $ref: '#/components/schemas/User'
     PipelineForPlanOpt:
       type: object
       properties:
