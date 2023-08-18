@@ -106,7 +106,7 @@ paths:
                 $ref: '#/components/schemas/CaseOptResponse'
         '405':
           description: Invalid input
-  /case/filteListCases:
+  /case/filterListCases:
     get:
       tags:
         - Case Management
@@ -124,7 +124,7 @@ paths:
                   $ref: '#/components/schemas/CaseFilter'
         '400':
           description: Invalid status value
-  /case/filteListCreators:
+  /case/filterListCreators:
     get:
       tags:
         - Case Management
@@ -484,7 +484,7 @@ paths:
                   $ref: '#/components/schemas/PipelineFilter'
         '400':
           description: Invalid status value
-  /pipeline/filteListPipelineCreators:
+  /pipeline/filterListPipelineCreators:
     get:
       tags:
         - Pipeline Management
@@ -510,7 +510,7 @@ paths:
                   $ref: '#/components/schemas/User'
         '400':
           description: Invalid status value
-  /pipeline/filteListPlanCreators:
+  /pipeline/filterListPlanCreators:
     get:
       tags:
         - Pipeline Management
@@ -1887,4 +1887,5 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Case'
+
 
