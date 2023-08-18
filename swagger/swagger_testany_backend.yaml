@@ -1596,7 +1596,9 @@ components:
         creator:
           $ref: '#/components/schemas/User'
         planed_by:
-          $ref: '#/components/schemas/PlanForExecution'
+          type: array
+          items:
+            $ref: '#/components/schemas/PlanForExecution'
         dry_run_result:
           $ref: '#/components/schemas/PipelineDryrunExecutionDetail'
     PipelineForList:
