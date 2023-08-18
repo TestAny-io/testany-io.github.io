@@ -721,6 +721,37 @@ paths:
                     $ref: '#/components/schemas/CaseResult'
         '400':
           description: Invalid status value
+  /workspace/check:
+    get:
+      tags:
+        - Workspace Management
+      summary: Check a Workspace is unique or not
+      description: Check a Workspace is unique or not
+      operationId: checkWorkspace
+      parameters:
+        - name: key
+          in: query
+          description: key of workspace to return
+          required: true
+          schema:
+            type: string
+            example: WKS
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: integer
+                    example: 1
+                    description: |
+                      1 -> unique
+                      2 -> duplicate
+        '405':
+          description: Invalid input
   /workspace:
     post:
       tags:
@@ -1852,5 +1883,4 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Case'
-
 
