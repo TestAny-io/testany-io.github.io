@@ -1375,7 +1375,7 @@ components:
       properties:
         dry_run_key:
           type: string
-          example: '12345678'
+          example: 'XXXXXXX'
         name:
           type: string
           example: my-first-test-case
@@ -1385,6 +1385,13 @@ components:
         framework:
           type: string
           example: postman/collection
+        status:
+          type: integer
+          example: 0
+          description: |
+            * 0 -> running
+            * 1 -> success
+            * 2 -> failure
         environment:
           type: string
           example: prod
