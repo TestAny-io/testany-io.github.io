@@ -969,33 +969,6 @@ paths:
                   $ref: '#/components/schemas/PlanForList'
         '405':
           description: Invalid input
-  # /user:
-  #   post:
-  #     tags:
-  #       - User Management
-  #     summary: Add a new User
-  #     description: Add a new User
-  #     operationId: addUser
-  #     requestBody:
-  #       description: Create a new User
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: '#/components/schemas/UserForCreate'
-  #       required: true
-  #     responses:
-  #       '200':
-  #         description: Successful operation
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 id:
-  #                   type: string
-  #                   example: boyi.liang@testany.io
-  #       '405':
-  #         description: Invalid input
   /user/filterListWatchers:
     get:
       tags:
@@ -1003,6 +976,15 @@ paths:
       summary: List users
       description: List Users
       operationId: listUsers
+      parameters:
+        - name: workspace
+          in: query
+          description: key of workspace to return, currently not support using workspace to query user, after permision lauched, then support this.
+          required: true
+          schema:
+            type: string
+            example: WKS
+             
       responses:
         '200':
           description: Successful operation
@@ -1244,7 +1226,6 @@ components:
           items:
             type: string
             example: PROD
-
     Workspace:
       type: object
       properties:
@@ -1527,6 +1508,11 @@ components:
         description:
           type: string
           example: this is my first pipeline
+        environments:
+          type: array
+          items:
+            type: string
+            example: prod
         creator:
           $ref: '#/components/schemas/User'
         planed_by:
