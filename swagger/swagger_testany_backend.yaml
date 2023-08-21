@@ -969,33 +969,33 @@ paths:
                   $ref: '#/components/schemas/PlanForList'
         '405':
           description: Invalid input
-  /user:
-    post:
-      tags:
-        - User Management
-      summary: Add a new User
-      description: Add a new User
-      operationId: addUser
-      requestBody:
-        description: Create a new User
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserForCreate'
-        required: true
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    example: boyi.liang@testany.io
-        '405':
-          description: Invalid input
+  # /user:
+  #   post:
+  #     tags:
+  #       - User Management
+  #     summary: Add a new User
+  #     description: Add a new User
+  #     operationId: addUser
+  #     requestBody:
+  #       description: Create a new User
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: '#/components/schemas/UserForCreate'
+  #       required: true
+  #     responses:
+  #       '200':
+  #         description: Successful operation
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: object
+  #               properties:
+  #                 id:
+  #                   type: string
+  #                   example: boyi.liang@testany.io
+  #       '405':
+  #         description: Invalid input
   /user/filterListWatchers:
     get:
       tags:
@@ -1037,76 +1037,6 @@ paths:
                 $ref: '#/components/schemas/MeteringRequestResponse'
         '405':
           description: Invalid input
-  # /metering/pipelineExecution:
-  #   get:
-  #     tags:
-  #       - Metering Query
-  #     summary: List count
-  #     description: List count
-  #     operationId: listPipelineExecutionCount
-  #     parameters:
-  #       - name: begin_time
-  #         in: query
-  #         description: beginTime of execution
-  #         required: true
-  #         schema:
-  #           type: string
-  #           example: '2023-08-15T11:22:33Z'
-  #       - name: end_time
-  #         in: query
-  #         description: endTime of execution
-  #         required: true
-  #         schema:
-  #           type: string
-  #           example: '2023-08-15T11:22:33Z'
-  #     responses:
-  #       '200':
-  #         description: Successful operation
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 count:
-  #                   type: integer
-  #                   format: int64
-  #       '405':
-  #         description: Invalid input
-  # /metering/caseExecution:
-  #   get:
-  #     tags:
-  #       - Metering Query
-  #     summary: List count
-  #     description: List count
-  #     operationId: listCaseExecutionCount
-  #     parameters:
-  #       - name: begin_time
-  #         in: query
-  #         description: beginTime of execution
-  #         required: true
-  #         schema:
-  #           type: string
-  #           example: '2023-08-15T11:22:33Z'
-  #       - name: end_time
-  #         in: query
-  #         description: endTime of execution
-  #         required: true
-  #         schema:
-  #           type: string
-  #           example: '2023-08-15T11:22:33Z'
-  #     responses:
-  #       '200':
-  #         description: Successful operation
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 count:
-  #                   type: integer
-  #                   format: int64
-  #       '405':
-  #         description: Invalid input
 components:
   schemas:
     MeteringRequest:
@@ -1120,47 +1050,47 @@ components:
           properties:
             begin_time:
               type: string
-              example: "2023-08-15T11:22:33Z"
+              example: '2023-08-15T11:22:33Z'
             end_time:
               type: string
-              example: "2023-08-15T11:22:33Z"
+              example: '2023-08-15T11:22:33Z'
         case_exec_count:
           type: object
           properties:
             begin_time:
               type: string
-              example: "2023-08-15T11:22:33Z"
+              example: '2023-08-15T11:22:33Z'
             end_time:
               type: string
-              example: "2023-08-15T11:22:33Z"
+              example: '2023-08-15T11:22:33Z'
         workspace_pipeline_exec_count:
           type: object
           properties:
             workspace:
               type: string
-              example: "WKS"
+              example: WKS
             begin_time:
               type: string
-              example: "2023-08-15T11:22:33Z"
+              example: '2023-08-15T11:22:33Z'
             end_time:
               type: string
-              example: "2023-08-15T11:22:33Z"
+              example: '2023-08-15T11:22:33Z'
         workspace_case_exec_count:
           type: object
           properties:
             workspace:
               type: string
-              example: "WKS"
+              example: WKS
             begin_time:
               type: string
-              example: "2023-08-15T11:22:33Z"
+              example: '2023-08-15T11:22:33Z'
             end_time:
               type: string
-              example: "2023-08-15T11:22:33Z"
+              example: '2023-08-15T11:22:33Z'
     MeteringRequestResponse:
       type: object
       properties:
-        workspace_count: 
+        workspace_count:
           type: integer
           example: 0
         pipeline_exec_count:
@@ -1169,7 +1099,6 @@ components:
         case_exec_count:
           type: integer
           example: 0
-          
     UserForCreate:
       type: object
       properties:
@@ -1216,6 +1145,9 @@ components:
         email:
           type: string
           example: boyi.liang@testany.io
+        avatar:
+          type: string
+          example: null
     PlanForOpt:
       type: object
       properties:
@@ -1234,7 +1166,13 @@ components:
         pipelines:
           type: array
           items:
-            $ref: '#/components/schemas/PipelineForPlanOpt'
+            type: string
+            example: WKS-0001
+        watchers:
+          type: array
+          items:
+            type: string
+            example: '10'
     PlanCreateResponse:
       type: object
       properties:
@@ -1256,6 +1194,11 @@ components:
         schedule_str:
           type: string
           example: Every day 31st
+        schedule_exp:
+          type: string
+          example: '* * * * *'
+        creator:
+          $ref: '#/components/schemas/User'
     PlanForDetail:
       type: object
       properties:
@@ -1278,38 +1221,30 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PipelineForPlan'
-        creator:
-          $ref: '#/components/schemas/User'
-    PipelineForPlanOpt:
-      type: object
-      properties:
-        key:
-          type: string
-          example: WKS
-        watcher_ids:
+        watchers:
           type: array
           items:
-            type: string
-            example: '10'
+            $ref: '#/components/schemas/User'
+        creator:
+          $ref: '#/components/schemas/User'
     PipelineForPlan:
       type: object
       properties:
         key:
           type: string
-          example: WKS
+          example: WKS-0001
         name:
           type: string
-          example: Demo
+          example: My-first-pipeline
         description:
           type: string
-          example: WKS
+          example: This is my first pipeline
         environments:
-          type: string
-          example: WKS
-        watchers:
           type: array
           items:
-            $ref: '#/components/schemas/User'
+            type: string
+            example: PROD
+
     Workspace:
       type: object
       properties:
@@ -1417,7 +1352,7 @@ components:
     CaseDryRunResult:
       type: object
       properties:
-        dry_run_key:
+        dry_run_id:
           type: string
           example: XXXXXX
           description: Used for save test case, it contains case meta and dryrun result
@@ -1446,10 +1381,10 @@ components:
           example: This is my first test case
         framework:
           type: string
-          example: 'postman/collection'
+          example: postman/collection
         environment:
           type: string
-          example: 'prod'
+          example: prod
         dry_run_result:
           $ref: '#/components/schemas/CaseResult'
         creator:
@@ -1468,10 +1403,10 @@ components:
           example: This is my first test case
         framework:
           type: string
-          example: 'postman/collection'
+          example: postman/collection
         environment:
           type: string
-          example: 'prod'
+          example: prod
         dry_run_result:
           $ref: '#/components/schemas/CaseResult'
         creator:
@@ -1564,7 +1499,6 @@ components:
             example: TMC
         dry_run_result:
           $ref: '#/components/schemas/PipelineDryrunExecutionDetail'
-          
     PipelineDryrunExecutionDetail:
       type: object
       properties:
@@ -1876,8 +1810,6 @@ components:
             - 2
           description: |
             `0` - Running `1` - Passed `2` - Failed
-        # results:
-        #   $ref: '#/components/schemas/CaseResult'
         creator:
           $ref: '#/components/schemas/User'
   requestBodies:
@@ -1887,5 +1819,4 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Case'
-
 
