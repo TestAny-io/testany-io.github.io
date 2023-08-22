@@ -913,7 +913,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PlanForOpt'
+              $ref: '#/components/schemas/PlanForOptCreate'
         required: true
       responses:
         '200':
@@ -1184,6 +1184,37 @@ components:
         avatar:
           type: string
           example: null
+    PlanForOptCreate:
+      type: object
+      properties:
+        workspace:
+          type: string
+          example: 'WKS-0001'
+        name:
+          type: string
+          example: My first plan
+        description:
+          type: string
+          example: This is my first plan
+        schedule_expr:
+          type: string
+          example: '* * * * *'
+        schedule_str:
+          type: string
+          example: Every day 31
+        timezone:
+          type: string
+          example: "UTC"
+        pipelines:
+          type: array
+          items:
+            type: string
+            example: WKS-0001
+        watchers:
+          type: array
+          items:
+            type: string
+            example: '10'
     PlanForOpt:
       type: object
       properties:
@@ -1199,6 +1230,9 @@ components:
         schedule_str:
           type: string
           example: Every day 31
+        timezone:
+          type: string
+          example: "UTC"
         pipelines:
           type: array
           items:
