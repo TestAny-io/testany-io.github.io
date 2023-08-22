@@ -1267,6 +1267,10 @@ components:
         schedule_exp:
           type: string
           example: '* * * * *'
+        watchers:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
         creator:
           $ref: '#/components/schemas/User'
     PlanForDetail:
