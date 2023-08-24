@@ -1,12 +1,12 @@
 #!/bin/bash
 
 _get-version() {
-  local version=$(git describe --tags --abbrev=0 --match *.*.*)
+  local version=$(git describe --tags --abbrev=0 --match "*.*.*")
   echo -n "$version"
 }
 
 _is-tagged() {
-  git describe --tags --exact-match --match *.*.* > /dev/null 2>&1
+  git describe --tags --exact-match --match "*.*.*" > /dev/null 2>&1
 }
 
 _tag-version() {
@@ -14,7 +14,7 @@ _tag-version() {
     return
   fi
   local branch=$(git rev-parse --abbrev-ref HEAD)
-  local version=$(git describe --tags --abbrev=0 --match *.*.*)
+  local version=$(git describe --tags --abbrev=0 --match "*.*.*")
   local comments=$(git log "$version"...HEAD --format=%s)
   if echo "$comments" | grep '(MAJOR)' > /dev/null ; then
     version=$(semver bump major "$version")
