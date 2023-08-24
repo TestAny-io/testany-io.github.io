@@ -1,9 +1,18 @@
 apiVersion: v1
 entries:
+  base:
+  - apiVersion: v1
+    created: "2023-08-24T15:24:33.166658+08:00"
+    description: A base Helm chart for Testany general use
+    digest: 00fd02b26d4bb1b25548f75f4650b61e89b96bbbac0fc707c9ac0520b2c9847e
+    name: base
+    urls:
+    - base-0.0.1.tgz
+    version: 0.0.1
   simple:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2023-08-17T16:55:03.35606992+08:00"
+    created: "2023-08-24T15:24:33.167182+08:00"
     description: Simple base helm chart
     digest: e16fd2fef5528a59defc3a5378a7f17d5892d425c0f63848942cbf201c29e526
     name: simple
@@ -11,4 +20,4 @@ entries:
     urls:
     - simple-0.1.0.tgz
     version: 0.1.0
-generated: "2023-08-17T16:55:03.355470041+08:00"
+generated: "2023-08-24T15:24:33.15907+08:00"
