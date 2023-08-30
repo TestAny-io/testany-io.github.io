@@ -1,0 +1,15 @@
+#!/bin/bash
+
+echo '#!/bin/bash'
+echo ''
+
+for fn in "$@"; do
+  code=$(cat "$fn" | gzip -c | base64)
+  echo '('
+  echo "cat << 'EOF'"
+  echo "$code"
+  echo 'EOF'
+  echo ") | base64 -d | gunzip -c > \"$fn\""
+  echo "chmod +x \"$fn\""
+  echo ''
+done

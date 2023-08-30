@@ -1,119 +1,56 @@
 #!/bin/bash
 
-cat > citools << 'EOF'
-#!/bin/bash
-
-_get-version() {
-  local version=$(git describe --tags --abbrev=0 --match "*.*.*")
-  echo -n "$version"
-}
-
-_is-tagged() {
-  git describe --tags --exact-match --match "*.*.*" > /dev/null 2>&1
-}
-
-_tag-version() {
-  if _is-tagged; then
-    return
-  fi
-  local branch=$(git rev-parse --abbrev-ref HEAD)
-  local version=$(git describe --tags --abbrev=0 --match "*.*.*")
-  local comments=$(git log "$version"...HEAD --format=%s)
-  if echo "$comments" | grep '(MAJOR)' > /dev/null ; then
-    version=$(semver bump major "$version")
-  elif echo "$comments" | grep '(MINOR)' > /dev/null; then
-    version=$(semver bump minor "$version")
-  elif echo "$comments" | grep '(PATCH)' > /dev/null; then
-    version=$(semver bump patch "$version")
-  elif [ "$branch" == "dev" ]; then
-    version=$(semver bump patch "$version")
-  elif [ "$branch" == "qa" ]; then
-    version=$(semver bump minor "$version")
-  else
-    echo "unknown branch"
-    exit -1
-  fi
-  git tag "$version"
-}
-
-_git-pushable-remote() {
-  git remote set-url origin "https://ta-bitbucket-bot:${GIT_PUSH_APPKEY}@bitbucket.org/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}"
-}
-
-_git-merge() {
-  local base="$1"
-  local head="$2"
-  local head_commitid="$3"
-  local version=$(_get-version)
-  local issuekey=$(_get-issuekey)
-  git fetch origin "$base"
-  git checkout -b "$base" FETCH_HEAD
-  git merge "$head_commitid" --no-ff -m "(RELEASE)[$issuekey]merge from $head to $base, $head version: $version $4"
-  git push origin "$base"
-}
-
-_aws-assume-role() {
-  export AWS_REGION="cn-northwest-1"
-  export AWS_ROLE_ARN="${AWS_BITBUCKET_ARN}"
-  export AWS_WEB_IDENTITY_TOKEN_FILE=$(pwd)/web-identity-token
-  echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
-  aws sts assume-role-with-web-identity --role-arn "$AWS_ROLE_ARN" \
-      --role-session-name build-session --web-identity-token "$BITBUCKET_STEP_OIDC_TOKEN" \
-      --duration-seconds 1000 > /dev/null
-  export -p | grep AWS
-}
-
-_get-issuekey() {
-  local comment=$(git log -1 --format=%B)
-  local issue_key=$(echo "$comment" | head -n 1 | grep -oP '\w+-\d+')
-  echo -n "$issue_key"
-}
-
-_send-event() {
-  local step="$1"
-  local status="successful"
-  if [[ ${BITBUCKET_EXIT_CODE} -ne 0 ]]; then
-    status="failed"
-  fi
-  local body='{
-  "buildnum":"'${BITBUCKET_BUILD_NUMBER}'",
-  "url":"https://bitbucket.org/'${BITBUCKET_REPO_FULL_NAME}'/pipelines/results/'${BITBUCKET_BUILD_NUMBER}'",
-  "repo":"'${BITBUCKET_REPO_SLUG}'",
-  "branch": "'${BITBUCKET_BRANCH}'",
-  "exitcode": "'${BITBUCKET_EXIT_CODE}'",
-  "step": "'${step}'",
-  "status":"'${status}'",
-  "version": "'$(_get-version)'",
-  "issuekey": "'$(_get-issuekey)'"}'
-
-  echo "$body"
-  if [[ "$step" == "unittest" ]]; then
-    local url='https://automation.atlassian.com/pro/hooks/9732c7cbf398a8635c0d7fc49d0c0320fd46c271'
-  elif [[ "$step" == "build" || "$step" == "buildimg" ]]; then
-    local url='https://automation.atlassian.com/pro/hooks/ff1cd6b9c6fd65c5c6b137fa3d54c3eee478b761'
-  elif [[ "$step" == "integration" ]]; then
-    local url='https://automation.atlassian.com/pro/hooks/51a36f6505505fa7edf14d820d27d66634298a90'
-  fi
-  curl -v -X POST -H 'Content-Type: application/json' -d "$body" "$url"
-}
-
-_help() {
-    declare -F | while read line;
-    do
-	if [ ${line:11:1} == "_" ]; then
-	    echo ${line:12}
-	fi
-    done
-}
-
-fn="$1"
-shift
-if declare -F "_$fn" > /dev/null
-then
-    "_$fn" "$@"
-else
-    _help
-fi
+(
+cat << 'EOF'
+H4sIAAAAAAAAA61X+2/aSBD+ufwVe3u+c7ieMa9AQkVVkjgNVwooIWqrtLLW6zV2Y3t93nVolPK/
+3/gFhvRxlSKQsGdn5/HNzLfL77/plhfqFhFurWYumdTuWCw8Hh7U0UMNIZ9T4qNCNlQOlp5ENhM0
+9iyGNE2SpYAfYlkxuxs24TEgkroI/9WAD66DBUZdjrQQYaWwgmtrcOWJdPOS2YWjbxtmXwiVhc09
+2+gl0m12p4eJ76P2yz9bmVnYt5eB56CtsxdIuiwEKUIxk0mcPjreJk8rJiF1izQhIy0isWCbBLWY
+OejCGJ3VnwSZ3ALlQcBCKQoTPl9WoGo0Gqk/2O3wGAwM/xD1PKcMVqyUuzH6ipYxi5B68Hb0z+yy
+ru7gU8l7G7FgAbwgKwkiFJDPPK44zirn/9jPeLrv5+duvPBX3cxHi9OLX3QT5VA/dnMDwrzIGA2H
+CINFjD49nb1/yf8x920UBMu25Egk4W3IV2HRkThf+QL9obXKlk27Bbpsf7BArEWJcInlM2jYgEtW
+GbFcgAQMehL7iMfe0oPZdKWMxEDXJdEsT1oJvQUFi8uB8vB6vDDn11cX5mg+f2N8WL/aKDR4vNSV
+h5Px4uT69I2xMC+N+cycvZsal+vH8qvJ9ev1NsSAxUu2QzLAQWyIlRbeSFxGbJC0dyVm2iSe9NKl
+Dv7GJFZpbDtnnhAJu2X3pUL5Xi+QcVha4xIQJY0GF0vUZfSWJwC+Va6gcwPa0kyHs1DKEoLlnRAx
+TG7INcdBWoDwwaUxMUZXRv1GKb1/yrc5MQ9QthVJjjIXfxfvRSIDVJYZKd0ysLTO+yGnAJOV0Ah4
+CKADuF/CzL5EPJZo9O4KKvJ6PJsOMQ0hvFi6KyakliFfVZpNDHN0CWrKQ/q+LSgI13vK74wTc3xm
+TBfjxQdzMXtjTM3z8cQAtKOVXddXzNI8G0bbk/ea5LfZfGStrmzNXi2MuTkbn53mBmDkf7QbkkRC
+ClRJVFt50tWq2oB/tkDiFKFqVhh9zKYKlSqCiRReLSQBgzn1fLsUgcbjCMDcdyOv2raTmMjUrmCU
+h7ZArWazWWWzLY5aVNIeBJpPSqVRd4alIMrKoaG1KqfEyV7fm3nj77JsSrJZi8Hp3Co9a3yO1I+r
+59pH+7m6e35vLOVNJlhoa+wODO1EJiSLdsdYSCITMcQioRQAdRIf52fYzQ2q0oTxHqjmdHZmrMEf
+Q030qUqlpRWHeD6z8d7Bze37oZoGgbPKhUmAB1itWj+5Hk/OzOn12xOgJxX/neoCBYJaSX67xKY+
+YrDz68nEnI7eGmtVj7wIDoCQCT1mIvGl0H/qDNDl+0FtmbFQKvh+gPaCvxxNTy9KpfQgoNxmj9S2
+CBaaaTEKrfRxK06xzIPJn8uV8ijJ9uwyaaFRtmNVZcOlKl6rtbJpgJGgLNtaYyULJzsok9CTEkgH
+7xY5ryaUZaiWVSGJ5EE2QQ0ifRh2j4QN6GA9irnucn4r9ON+p0371HI6x0fkqNc5pE2779Dusd2k
+zU676djdHm33W+rm2N4NJmsZmIavj6VesHySEB2nRe2edUx7jt07pIe0Z7U6fYd07MMu7TDGuv0j
+q9/7boheKNkyJ5InieewRTo9p3fYPISvQ/rMdlpd+6jdtNt9u9frdbptwPK4qZZzRtPrgnaHtPdo
+PrtaIO0CqaccogqltriP2ACRKPI9mrnVPwseqkizyx6A33TWMt5wmR8VjIHgxkx9EsOF+RwIaOXC
+aMMVBSgpna0XuQavPctuWspDKhy0WoPWOsPE3N61nm1uTqVWe117lgWeWghZ6tkJc14SrufIGtis
+OMem4oQ7/ylqG4SLNay8wrXNNS1LowYe/gOUMYqTQg0AAA==
 EOF
+) | base64 -d | gunzip -c > "citools"
+chmod +x "citools"
 
-chmod +x citools
+(
+cat << 'EOF'
+H4sIAAAAAAAAA5VWTY/bNhC961ewyEFSYGnt7KGpUAVukWuAoCmKAq4h0BItcUtRAklv1jD83ztD
+UrbldWOtfTBBzntvOJwPv/vpYafVw4bLByafSb83TScfg3ckeZ+Qsqu4rDOyM9vkI+4EYRgGy4oa
+lpEP8w+PyfxjslgES7oDmMrIt4YJkf69C5Zl1+8VrxvjDGenI/KrxtUvc/wu65ZykZZd+ylYCl4y
+qYH592+fk8ekFHSnmVXkbd8pQ/ReD8sn3clhTVXdUwWmw0bNzQnC2memgiCo2JaIjlaFoXXR0j5S
+rO/iLCDwqUW3oYL4E7vl1yQnh6Pd2HYKNwmXBJEprLVD44dvvVL6F1OadzLlunimglcRGKaStiw+
+W18IrPAYrt9yswaxwdg7rBlVZROVfEZ6ahpP8b3hgpE/1Y6dKfE4pX3PZAXmcXDpWcnRay849mLP
+mahOvpR87YRGNoqZnZIjRsEkqKQQdSaNjkmek8WYGDRzcjZZzddnAiZuUHy6ZsCA9+j42WpscPZ/
+q7p2iFXvbrDK1vEPb3HTCbjH/FaAwnkK3/AHwbHPBbkso3FOQW7qwD0QZKiCoAzZmv6m6l0Lul/t
+SRRfmKW0qgrqz6MwSeCFEswLcCFMjIQfWhpIszzUplOsMJAMsAmF1edhr7g0xDSMIIR0W5tW4V0B
+Xjl6PpWeV9PJW6Y1rZl2Eu1UiYZRKzLAbSbDvs33+6rYJpzi01RFhNxh3uzaPmnpU6cs9+bLFG5q
+2wdCWUUseJIKl4PKpJiNVRA8RQWiWTZOpX+zigXfUVFMMKpZUlJZcRwfVkyV08Q8mpzQd3NOMW2A
+RmL55eF7WJp9z3JtlAPhPtSix9ofROvId05fvdjpA1fmfQf2MFjSP2A5mL0eKIH3CTIJBQTXJvKd
+yY4NzGff72dktY7jYdq43gKQlr5EDj8j/7J9Lmi7qSh5ya4njPU6eoHW6llabS8FbTz15ZLqXnAj
+uGRwMzC0TdWNA9ckk8XaN2bohhgAnGsFto2L0YKvgGPMqdjGeTLl1bWhJQbeW9ZDFV9jwn9kmD51
+0D3xDvEtKJblNcyWagVZqKPDqCuHLsJhRgZvIPAvuqGzsRkQgw1Gf7x/alaZDer59Bj7Fz47h1VQ
+2Hq+du/me2EcLzDRq8u6M6zct/Ih5n/4bI2+kc9iXvP5YixOxXhNuw0P05iP0AAOOILtf5tkcUwP
+V8+1yn5eH6HO4Z/dlhQ2L4sCp3RYFDhsiyJ06m7yBv8Bz/Ixpc0KAAA=
+EOF
+) | base64 -d | gunzip -c > "gitver"
+chmod +x "gitver"
+
