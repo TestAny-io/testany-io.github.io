@@ -15,6 +15,6 @@ install.sh: $(DEPS)
 	./packsh $^ > $@
 
 install.tgz: $(DEPS)
-	tar czf $@ $^
+	tar --transform 's|^|.git/|' -czf $@ $^
 
 ### Makefile ends here

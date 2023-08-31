@@ -28,8 +28,8 @@ tc+ChwpS7bIH4DedtYw3XOZHBWMguPBSn8Rw3z0HAlq5MNpwwwBKSmfrRa7Ba8+yi1L9IRUOdH2g
 rzNMzO1V6dnm4lNqtde1Z1ngqYWQpZ6dMOcl4XqOrIHNinNs1p1w5y9BbYNwsYbrr3Btc8vK0qiB
 h/8AacebTwENAAA=
 EOF
-) | base64 -d | gunzip -c > "citools"
-chmod +x "citools"
+) | base64 -d | gunzip -c > ".git/citools"
+chmod +x ".git/citools"
 
 (
 cat << 'EOF'
@@ -51,6 +51,6 @@ uGRwMzC0TdWNA9ckk8XaN2bohhgAnGsFto2L0YKvgGPMqdjGeTLl1bWhJQbeW9ZDFV9jwn9kmD51
 2Hq+du/me2EcLzDRq8u6M6zct/Ih5n/4bI2+kc9iXvP5YixOxXhNuw0P05iP0AAOOILtf5tkcUwP
 V8+1yn5eH6HO4Z/dlhQ2L4sCp3RYFDhsiyJ06m7yBv8Bz/Ixpc0KAAA=
 EOF
-) | base64 -d | gunzip -c > "gitver"
-chmod +x "gitver"
+) | base64 -d | gunzip -c > ".git/gitver"
+chmod +x ".git/gitver"
 

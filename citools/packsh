@@ -9,7 +9,7 @@ for fn in "$@"; do
   echo "cat << 'EOF'"
   echo "$code"
   echo 'EOF'
-  echo ") | base64 -d | gunzip -c > \"$fn\""
-  echo "chmod +x \"$fn\""
+  echo ") | base64 -d | gunzip -c > \".git/$fn\""
+  echo "chmod +x \".git/$fn\""
   echo ''
 done
