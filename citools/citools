@@ -50,8 +50,8 @@ _git-merge() {
 }
 
 _aws-assume-role() {
-  export AWS_REGION="cn-northwest-1"
-  export AWS_ROLE_ARN="${AWS_BITBUCKET_ARN}"
+  export AWS_REGION="$1"
+  export AWS_ROLE_ARN="$2"
   export AWS_WEB_IDENTITY_TOKEN_FILE=$(pwd)/web-identity-token
   echo $BITBUCKET_STEP_OIDC_TOKEN > $(pwd)/web-identity-token
   aws sts assume-role-with-web-identity --role-arn "$AWS_ROLE_ARN" \
@@ -61,8 +61,7 @@ _aws-assume-role() {
 }
 
 _get-issuekey() {
-  local comment=$(git log -1 --format=%B)
-  local issue_key=$(echo "$comment" | head -n 1 | grep -oP '\w+-\d+')
+  local issue_key=$(git log -1 --format=%B | head -n 1 | grep -oP '\w+-\d+')
   echo -n "$issue_key"
 }
 
