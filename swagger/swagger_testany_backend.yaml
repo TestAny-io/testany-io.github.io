@@ -34,7 +34,63 @@ tags:
     description: Operations about User
   - name: Metering Query
     description: Query about Metering
+  - name: Invitation
+    description: Invite user
 paths:
+  /invite/loginViaEmails:
+    post:
+      tags:
+        - Invitation
+      summary: Send invite email to users
+      description: Send invite email to users
+      operationId: sendInvitationViaEmail
+      requestBody:
+        description: |
+          user emails array
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                emails: 
+                  type: array
+                  items:
+                    type: string
+                    example: 'boyi.liang@testany.io'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+  /invite/confirm/{cmd}:
+    get:
+      tags:
+        - Invitation
+      summary: confirm user invited
+      description: confirm user invited, after RBAC released, this method will auto assign the related permission for this user
+      operationId: invitationConfirm
+      parameters:
+        - name: cmd
+          in: path
+          description: string
+          schema:
+            type: string
+            example: base64_string
+          required: true
+      responses:
+        '303':
+          description: "303 response"
+          headers:
+            Location:
+              description: |
+                  provide a location for frontend to redirect
+              schema:
+                type: string
+                example: https://testany.testany.com.cn/workspace
+        '403':
+          description: "403 invitation forbidden"
+          
+              
+        
   /case/dryRun:
     post:
       tags:
@@ -1917,4 +1973,5 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Case'
+
 
