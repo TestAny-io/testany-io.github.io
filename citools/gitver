@@ -46,14 +46,15 @@ def search(ci, path):
 def main():
     global args
     parser = argparse.ArgumentParser()
-    parser.add_argument('--tag-name', '-tn', action='store_true', help='print the name of tag.')
-    parser.add_argument('--tag-id', '-ti', action='store_true', help='print the id of tag.')
-    parser.add_argument('--tag-messages', '-tm', action='store_true', help='print the head of messages in the path.')
-    parser.add_argument('--tag-json', '-tj', action='store_true', help='print the json.')
+    parser.add_argument('--tag-name', '-tn', action='store_true', help='print the name of the last tag.')
+    parser.add_argument('--tag-id', '-ti', action='store_true', help='print the id of the last tag.')
+    parser.add_argument('--tag-messages', '-tm', action='store_true', help='print the head messages in the path to the last tag.')
+    parser.add_argument('--tag-json', '-tj', action='store_true', help='print the json of the last tag.')
     parser.add_argument('--bump-major', '-bM', action='store_true', help='print a tag bumped major.')
     parser.add_argument('--bump-minor', '-bm', action='store_true', help='print a tag bumped minor.')
     parser.add_argument('--bump-patch', '-bp', action='store_true', help='print a tag bumped patch.')
     parser.add_argument('--release-candidate', '-rc', action='store_true', help='print a release candidate tag.')
+    parser.add_argument('--auto-version', '-av', action='store_true', help='print an auto generated version.')
     parser.add_argument('rest', nargs='*', type=str)
     args = parser.parse_args()
 
@@ -87,6 +88,12 @@ def main():
         print(semver.Version.parse(tag).bump_patch())
     elif args.release_candidate:
         print(f'{semver.Version.parse(tag).bump_patch()}-rc{len(path)-1}.{path[-1].hexsha[:7]}')
+
+    elif args.auto_version:
+        if path:
+            print(f'{semver.Version.parse(tag).bump_patch()}-rc{len(path)-1}.{path[-1].hexsha[:7]}')
+        else:
+            print(tag)
 
 
 if __name__ == '__main__':

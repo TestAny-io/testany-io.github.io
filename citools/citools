@@ -49,6 +49,16 @@ _git-merge() {
   git push origin "$base"
 }
 
+_git-set() {
+  local base="$1"
+  local head="$2"
+  local head_commitid="$3"
+  git fetch origin "$base"
+  git checkout -b "$base" FETCH_HEAD
+  git branch -f "$base" "$head_commitid"
+  git push origin "$base"
+}
+
 _aws-assume-role() {
   export AWS_REGION="$1"
   export AWS_ROLE_ARN="$2"
