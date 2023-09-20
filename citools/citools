@@ -5,7 +5,7 @@ _get-version() {
   if [[ "$version" == *-* ]]; then
     local cmtid="${version#*-}"
     version="${version%-*-*}"
-    version=$(.git/semver bump patch "$version")
+    version=$(${0%/*}/semver bump patch "$version")
     version="$version-rc"
     local issue_key=$(git rev-parse --abbrev-ref HEAD | grep -oP '\w+-\d+')
     if [[ -n "$issue_key" ]]; then
@@ -27,18 +27,18 @@ _tag-version() {
     return
   fi
   local branch=$(git rev-parse --abbrev-ref HEAD)
-  local version=$(.git/gitver -tn)
-  local comments=$(.git/gitver -tm)
+  local version=$(${0%/*}/gitver -tn)
+  local comments=$(${0%/*}/gitver -tm)
   if echo "$comments" | grep '(MAJOR)' > /dev/null ; then
-    version=$(.git/semver bump major "$version")
+    version=$(${0%/*}/semver bump major "$version")
   elif echo "$comments" | grep '(MINOR)' > /dev/null; then
-    version=$(.git/semver bump minor "$version")
+    version=$(${0%/*}/semver bump minor "$version")
   elif echo "$comments" | grep '(PATCH)' > /dev/null; then
-    version=$(.git/semver bump patch "$version")
+    version=$(${0%/*}/semver bump patch "$version")
   elif [ "$branch" == "dev" ]; then
-    version=$(.git/semver bump patch "$version")
+    version=$(${0%/*}/semver bump patch "$version")
   elif [ "$branch" == "qa" ]; then
-    version=$(.git/semver bump minor "$version")
+    version=$(${0%/*}/semver bump minor "$version")
   else
     echo "unknown branch"
     exit -1
