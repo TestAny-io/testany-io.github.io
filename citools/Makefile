@@ -4,7 +4,7 @@
 ## Version: $Id: Makefile,v 0.0 2023/07/19 07:48:42 shell Exp $
 ## Keywords: 
 ## X-URL: 
-DEPS=citools gitver
+DEPS=citools gitver semver
 
 all: clean install.sh install.tgz
 
