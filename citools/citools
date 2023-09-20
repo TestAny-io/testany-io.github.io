@@ -70,7 +70,9 @@ _git-merge() {
 _git-set() {
   local base="$1"
   local head="$2"
-  git push origin "$head":"$base"
+  git fetch origin "$base"
+  git checkout -b "$base" FETCH_HEAD
+  git push -f origin "$head":"$base"
 }
 
 _aws-assume-role() {
